@@ -4,6 +4,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JCheckBox;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import org.multistepcsrfpoc.controller.client.MultiStepCSRFPOCClient;
 import org.multistepcsrfpoc.model.MultiStepCSRFPOCModel;
@@ -15,7 +17,7 @@ import org.multistepcsrfpoc.view.MultiStepCSRFPOCWindow;
  * 
  *  TODO: The above can be implemented when required.
  * */
-public class MultiStepCSRFPOCController implements ActionListener {			
+public class MultiStepCSRFPOCController implements ActionListener, ListSelectionListener {			
 	private MultiStepCSRFPOCClient client;
 	private MultiStepCSRFPOCModel model;
 	private MultiStepCSRFPOCWindow view;
@@ -36,16 +38,24 @@ public class MultiStepCSRFPOCController implements ActionListener {
 		//registers this class as the handler for the UI components
 		view.registerHandler(controller);
 		view.registerTableModel(model.getTableModel());
+		view.registerRowSelectionListener(controller);
 	
 		//initializes the UI based on default model values
 		controller.initView();
+		
+		//also we select the first request if there is any such
+		if(view.getRequestsTable().getModel().getValueAt(0, 2) != null) {
+			view.highlightRow(0);
+			model.setSelectedRequestText(model.getSelectedRequest(0));
+			view.setSelectedRequestText(model.getSelectedRequestText());
+		}
 		return controller;
 	}
 	
 	/*
 	 * Sets the default values for the View
 	 * */
-	public void initView() {		
+	public void initView() {
 		if(model.isAllowScripts())
 			view.setAllowScript(true);
 		
@@ -72,39 +82,31 @@ public class MultiStepCSRFPOCController implements ActionListener {
 	 * Here comes the event listener method
 	 * */	
 	@Override
-	public void actionPerformed(ActionEvent actionEvent) {	
+	public void actionPerformed(ActionEvent actionEvent) {
 		String actionCommand = actionEvent.getActionCommand();
 		
 		if(actionCommand == MultiStepCSRFPOCWindow.UP_BUTTON) {
 			int rowIndex = view.getSelectedRow();
 			if(rowIndex > -1) {
-				//also update the selected row text
-				//update the model
-				model.setSelectedRequestText(model.getSelectedRequest(rowIndex));
-				//update the UI
-				view.setSelectedRequestText(model.getSelectedRequestText());
-				model.moveRowUp(rowIndex);
+				//move the selected row up
+				if(model.moveRowUp(rowIndex))
+					//update the view to hold the highlight onto the moved row				
+					view.highlightRow(rowIndex-1);
 			}
 		}
 		else if(actionCommand == MultiStepCSRFPOCWindow.DOWN_BUTTON) {
 			int rowIndex = view.getSelectedRow();
 			if(rowIndex > -1) {
-				//also update the selected row text
-				//update the model
-				model.setSelectedRequestText(model.getSelectedRequest(rowIndex));
-				//update the UI
-				view.setSelectedRequestText(model.getSelectedRequestText());
-				model.moveRowDown(rowIndex);
+				//move the selected row down
+				if(model.moveRowDown(rowIndex))
+					//update the view to hold the highlight onto the moved row				
+					view.highlightRow(rowIndex+1);
 			}
 		}
 		else if(actionCommand == MultiStepCSRFPOCWindow.REMOVE_BUTTON) {
 			int rowIndex = view.getSelectedRow();
 			if(rowIndex > -1) {
-				//also update the selected row text
-				//update the model
-				model.setSelectedRequestText(model.getSelectedRequest(rowIndex));
-				//update the UI
-				view.setSelectedRequestText(model.getSelectedRequestText());
+				//update the model				
 				model.removeRow(rowIndex);
 			}
 		}
@@ -140,4 +142,16 @@ public class MultiStepCSRFPOCController implements ActionListener {
 			client.copyHTMLClicked(model.getCsrfPOCText());
 		}
 	}
+
+	
+	@Override
+	public void valueChanged(ListSelectionEvent event) {
+		int selectedRow = view.getRequestsTable().getSelectedRow();
+		if(selectedRow == -1) return;
+		
+		//update the model
+		model.setSelectedRequestText(model.getSelectedRequest(selectedRow));
+		//update the view
+		view.setSelectedRequestText(model.getSelectedRequestText());
+	}	
 }

@@ -12,6 +12,8 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextPane;
 import javax.swing.ListSelectionModel;
+import javax.swing.UIManager;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableModel;
 import javax.swing.JCheckBox;
 import javax.swing.JRadioButton;
@@ -64,29 +66,10 @@ public class MultiStepCSRFPOCWindow {
 	private JSeparator separator3;
 	private JCheckBox autoSubmitCheckBox;	
 	private ButtonGroup pocOpenInGroup;
-	private ButtonGroup techniqueButtonGroup;
-
-	
-	/**
-	 * Launch the application.
-	 */
-	/*
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					MultiStepCSRFPOCWindow window = new MultiStepCSRFPOCWindow("CSRF POC 1");
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-	*/
+	private ButtonGroup techniqueButtonGroup;	
 
 	/**
-	 * Create the application.
+	 * Create the application window.
 	 */
 	public MultiStepCSRFPOCWindow(String title) {
 		initialize(title);
@@ -96,6 +79,14 @@ public class MultiStepCSRFPOCWindow {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize(String title) {
+		//set look and feel
+		try {
+			UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+		}
+		catch (Exception e) {
+			System.out.println("Exception is "+e.toString());
+		}
+		
 		this.buttons = new HashMap<String, AbstractButton>();
 		frame = new JFrame();
 		frame.setTitle(title);
@@ -103,7 +94,7 @@ public class MultiStepCSRFPOCWindow {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setPreferredSize(new Dimension(825,675));
 		mainScrollPane = new JScrollPane(getMainPanel());
-		frame.getContentPane().add(/*getMainPanel()*/mainScrollPane);		
+		frame.getContentPane().add(mainScrollPane);		
 	}
 	
 	private JPanel getMainPanel() {
@@ -112,16 +103,8 @@ public class MultiStepCSRFPOCWindow {
 			mainPanel.setPreferredSize(new Dimension(800, 650));
 			mainPanel.setLayout(null);
 			
-			//Requests Table			
-			requestsTable = new JTable();						
-			requestsTable.setBounds(7, 7, 676, 118);
-			requestsTable.setPreferredSize(new Dimension(676, 118));
-			
-			//set the selection mode to Single Interval selection which only allows
-			//contiguous rows selection
-			requestsTable.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);			
-			
-			tableScrollPane = new JScrollPane(requestsTable);
+			//Requests Table								
+			tableScrollPane = new JScrollPane(getRequestsTable());
 			tableScrollPane.setBounds(7, 7, 676, 118);
 			mainPanel.add(tableScrollPane);
 			
@@ -166,7 +149,6 @@ public class MultiStepCSRFPOCWindow {
 		}
 		return mainPanel;
 	}
-	
 	private JLabel getSelectedRequestLabel() {
 		if (selectedRequestLabel == null) {
 			selectedRequestLabel = new JLabel("Selected Request:");
@@ -321,6 +303,16 @@ public class MultiStepCSRFPOCWindow {
 		return autoSubmitCheckBox;
 	}
 	public JTable getRequestsTable() {
+		if(requestsTable == null) {
+			requestsTable = new JTable();
+			requestsTable.setBounds(7, 7, 676, 118);
+			requestsTable.setPreferredSize(new Dimension(676, 118));
+			
+			//set the selection mode to Single Interval selection which only allows
+			//contiguous rows selection
+			requestsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);			
+		}
+		
 		return requestsTable;
 	}
 	
@@ -338,19 +330,22 @@ public class MultiStepCSRFPOCWindow {
 		requestsTable.setModel(tableModel);
 		//once the model is set, we set the constraints
 		requestsTable.getColumnModel().getColumn(0).setMaxWidth(35);
-		requestsTable.getColumnModel().getColumn(1).setMaxWidth(100);
-		requestsTable.setColumnSelectionAllowed(false);
-		requestsTable.setRowSelectionAllowed(true);
-		requestsTable.setCellSelectionEnabled(false);
+		requestsTable.getColumnModel().getColumn(1).setMaxWidth(100);		
 	}
 	
-	//TODO: Implement the necessary methods that update the UI which can be called form the controller
+	//registers the ListSelectionListener
+	public void registerRowSelectionListener(ListSelectionListener listener) {
+		if(listener != null)
+			this.getRequestsTable().getSelectionModel().addListSelectionListener(listener);
+	}
+	
+	//DONE: Implement the necessary methods that update the UI which can be called form the controller
 	public int getSelectedRow() {
 		return requestsTable.getSelectedRow();
 	}
 	
 	public void setVisible() {
-		this.frame.setVisible(true);
+		this.frame.setVisible(true);		
 	}
 	
 	//sets allow script radio button to true
@@ -377,6 +372,11 @@ public class MultiStepCSRFPOCWindow {
 	public void setSelectedRequestText(String text) {
 		if(text == null) return;
 		selectedRequestTextPane.setText(text);
+	}
+	
+	//highlights the row at index row
+	public void highlightRow(int rowIndex) {
+		requestsTable.setRowSelectionInterval(rowIndex, rowIndex);
 	}
 	
 	//gets the SelectedRequestTextPane

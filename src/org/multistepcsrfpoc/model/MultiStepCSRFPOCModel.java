@@ -26,13 +26,13 @@ public class MultiStepCSRFPOCModel {
 	}
 	
 	/*Moves the selected row at rowIndex up one position*/
-	public void moveRowUp(int rowIndex) {
-		tableModel.moveRowUp(rowIndex);
+	public Boolean moveRowUp(int rowIndex) {
+		return tableModel.moveRowUp(rowIndex);
 	}
 	
 	/*Moves the selected row at rowIndex down one position*/
-	public void moveRowDown(int rowIndex) {
-		tableModel.moveRowDown(rowIndex);
+	public Boolean moveRowDown(int rowIndex) {
+		return tableModel.moveRowDown(rowIndex);
 	}
 	
 	/*Gets the request for the selected row*/

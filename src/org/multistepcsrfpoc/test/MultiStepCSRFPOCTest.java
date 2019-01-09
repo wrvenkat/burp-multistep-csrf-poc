@@ -14,6 +14,6 @@ public class MultiStepCSRFPOCTest {
 		for (int i=0; i< reqNum; i++)
 			requestList.add(new RequestModel("GET", "URL"+(i+1), "REQ"+(i+1)));
 		new MultiStepCSRFPOC(title, requestList, client);
-		System.out.println("UI Started!");
+		//System.out.println("UI Started!");
 	}
 }

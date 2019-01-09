@@ -14,7 +14,7 @@ public class RequestsTableModel extends AbstractTableModel {
 	
 	public RequestsTableModel(ArrayList<RequestModel> requestList) {
 		if(requestList != null && !requestList.isEmpty()) {
-			this.requests = requestList;			
+			this.requests = requestList;
 			//initialize the row no to request no map 
 			for(int index=1;index <= this.requests.size(); index++) {
 				if(this.rowToRequestNoMap == null)
@@ -84,39 +84,50 @@ public class RequestsTableModel extends AbstractTableModel {
 	}
 	
 	//moves a request up
-	public void moveRowUp(int row) {
-		System.out.println("Selected Row is "+row);
-		if (row <= 0 || row > requests.size()-1) return;
+	public Boolean moveRowUp(int row) {
+		//System.out.println("Selected Row is "+row);
+		
+		if (row <= 0 || row > requests.size()-1) return false;
+		
 		RequestModel request = requests.remove(row);
 		requests.add(row-1, request);
+		
 		//update the index map
 		int currentRequestNo = rowToRequestNoMap.get(row);		
 		rowToRequestNoMap.put(row, rowToRequestNoMap.get(row-1));
 		rowToRequestNoMap.put(row-1, currentRequestNo);
+		
 		fireTableRowsUpdated(row-1,requests.size()-1);
+		
+		return true;
 	}
 	
 	//moves a request down
-	public void moveRowDown(int row) {
-		System.out.println("Selected Row is "+row);
-		if (row < 0 || row >= requests.size()-1) return;
+	public Boolean moveRowDown(int row) {
+		//System.out.println("Selected Row is "+row);
+		
+		if (row < 0 || row >= requests.size()-1) return false;
+		
 		RequestModel request = requests.remove(row);
 		requests.add(row+1, request);
+		
 		//update the index map
 		int currentRequestNo = rowToRequestNoMap.get(row);		
 		rowToRequestNoMap.put(row, rowToRequestNoMap.get(row+1));
 		rowToRequestNoMap.put(row+1, currentRequestNo);
+		
 		fireTableRowsUpdated(row,requests.size()-1);
+		
+		return true;
 	}
 	
 	//returns the request associated with the request
 	public String getSelectedRequest(int row) {
-		if (row <= 0 || row >= requests.size()) return null;
+		if (row < 0 || row >= requests.size()) return null;
 		return requests.get(row).getRequest();
 	}
 	
-	//sets the request of the selected row
-	
+	//sets the request of the selected row	
 	public void setSelectedRequest(int row, String request) {
 		if (row <= 0 || row >= requests.size()) return;
 		requests.get(row).setRequest(request);
@@ -142,14 +153,21 @@ public class RequestsTableModel extends AbstractTableModel {
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		int row = rowIndex;
 		int column = columnIndex;
+		
+		//sanity check 1
+		if(rowIndex >= requests.size()) return null;
 		RequestModel request = requests.get(row);
+		
+		//sanity check 2
+		if(request == null) return null;
+		
 		switch (column) {
 			//request index column 
 			case 0:
 				return rowToRequestNoMap.get(rowIndex);		
 			//request method
 			case 1:
-				return request.getHttpMethod();				
+				return request.getHttpMethod();
 			//request URL
 			case 2:
 				return request.getUrl();
