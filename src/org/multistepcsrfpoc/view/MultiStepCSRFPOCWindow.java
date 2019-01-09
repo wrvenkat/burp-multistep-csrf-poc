@@ -79,14 +79,6 @@ public class MultiStepCSRFPOCWindow {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize(String title) {
-		//set look and feel
-		try {
-			UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-		}
-		catch (Exception e) {
-			System.out.println("Exception is "+e.toString());
-		}
-		
 		this.buttons = new HashMap<String, AbstractButton>();
 		frame = new JFrame();
 		frame.setTitle(title);

@@ -106,8 +106,12 @@ public class MultiStepCSRFPOCController implements ActionListener, ListSelection
 		else if(actionCommand == MultiStepCSRFPOCWindow.REMOVE_BUTTON) {
 			int rowIndex = view.getSelectedRow();
 			if(rowIndex > -1) {
-				//update the model				
+				//update the model
 				model.removeRow(rowIndex);
+				//update the model for the selected request
+				model.setSelectedRequestText("");
+				//update the UI
+				view.setSelectedRequestText(model.getSelectedRequestText());
 			}
 		}
 		else if(actionCommand == MultiStepCSRFPOCWindow.NEW_TAB_RADIOBUTTON) {
