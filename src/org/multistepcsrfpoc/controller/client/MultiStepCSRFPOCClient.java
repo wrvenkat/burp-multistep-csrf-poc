@@ -9,8 +9,9 @@ import org.multistepcsrfpoc.model.RequestModel;
  * */
 public interface MultiStepCSRFPOCClient {			
 	
-	/*Called when Regenerate button is called*/
-	public void regenerateClicked(CSRFPOCConfigModel csrfPOCConfig, ArrayList<RequestModel> requests);
+	/*Called when Regenerate button is clicked*/
+	/*Expects a String which is the new CSRF POC*/
+	public String regenerateClicked(CSRFPOCConfigModel csrfPOCConfig, ArrayList<RequestModel> requests);
 	
 	/*Copy HTML clicked*/
 	public void copyHTMLClicked(String csrfPOCText);

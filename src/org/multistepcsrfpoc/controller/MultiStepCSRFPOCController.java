@@ -145,7 +145,10 @@ public class MultiStepCSRFPOCController implements ActionListener, ListSelection
 				model.setAutoSubmit(false);
 		}
 		else if(actionCommand == MultiStepCSRFPOCWindow.REGENERATE_BUTTON) {
-			client.regenerateClicked(model.getCsrfPOCConfig(), model.getRequests());
+			String newCSRFPOC = client.regenerateClicked(model.getCsrfPOCConfig(), model.getRequests());
+			model.setCsrfPOCText(newCSRFPOC);
+			//update the UI
+			view.setCSRFPOCText(model.getCsrfPOCText());
 		}
 		else if(actionCommand == MultiStepCSRFPOCWindow.COPY_HTML_BUTTON) {
 			//update the model
@@ -154,7 +157,6 @@ public class MultiStepCSRFPOCController implements ActionListener, ListSelection
 			client.copyHTMLClicked(model.getCsrfPOCText());
 		}
 	}
-
 	
 	@Override
 	public void valueChanged(ListSelectionEvent event) {

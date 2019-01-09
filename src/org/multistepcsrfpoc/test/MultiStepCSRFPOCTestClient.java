@@ -9,7 +9,7 @@ import org.multistepcsrfpoc.model.RequestModel;
 public class MultiStepCSRFPOCTestClient implements MultiStepCSRFPOCClient {
 
 	@Override
-	public void regenerateClicked(CSRFPOCConfigModel csrfPOCConfig, ArrayList<RequestModel> requests) {
+	public String regenerateClicked(CSRFPOCConfigModel csrfPOCConfig, ArrayList<RequestModel> requests) {
 		System.out.println("Regenerate Button Clicked!");
 		System.out.println("\n"+
 							"CSRF POC Config is "+"\n"+
@@ -20,6 +20,7 @@ public class MultiStepCSRFPOCTestClient implements MultiStepCSRFPOCClient {
 							"Use Form: "+csrfPOCConfig.isUseForm()+"\n"+
 							"Auto Submit: "+csrfPOCConfig.isAutoSubmit()							
 						  );
+		return "<NEW CSRF POC>";
 	}
 
 	@Override
