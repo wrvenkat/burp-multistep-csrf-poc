@@ -11,14 +11,15 @@ public class MultiStepCSRFPOCTestClient implements MultiStepCSRFPOCClient {
 	@Override
 	public void regenerateClicked(CSRFPOCConfigModel csrfPOCConfig, ArrayList<RequestModel> requests) {
 		System.out.println("Regenerate Button Clicked!");
-		System.out.println("CSRF POC Config is "+
-							"Use Iframe: "+csrfPOCConfig.isUseIframe()+" "+
-							"Use new tab: "+csrfPOCConfig.isUseNewTab()+" "+
-							"Use XHR: "+csrfPOCConfig.isUseXhr()+" "+
-							"Use Form: "+csrfPOCConfig.isUseForm()+" "+
-							"Auto Submit: "+csrfPOCConfig.isAutoSubmit()+" "+
-							"Allow Scripts: "+csrfPOCConfig.isAllowScripts()
-		);
+		System.out.println("\n"+
+							"CSRF POC Config is "+"\n"+
+							"Allow Scripts: "+csrfPOCConfig.isAllowScripts()+"\n"+
+							"Use new tab: "+csrfPOCConfig.isUseNewTab()+"\n"+
+							"Use Iframe: "+csrfPOCConfig.isUseIframe()+"\n"+							
+							"Use XHR: "+csrfPOCConfig.isUseXhr()+"\n"+
+							"Use Form: "+csrfPOCConfig.isUseForm()+"\n"+
+							"Auto Submit: "+csrfPOCConfig.isAutoSubmit()							
+						  );
 	}
 
 	@Override

@@ -115,26 +115,34 @@ public class MultiStepCSRFPOCController implements ActionListener, ListSelection
 			}
 		}
 		else if(actionCommand == MultiStepCSRFPOCWindow.NEW_TAB_RADIOBUTTON) {
-			model.setUseNewTab(true);			
+			model.setUseNewTab(true);
+			model.setUseIframe(false);
 		}
 		else if(actionCommand == MultiStepCSRFPOCWindow.IFRAME_RADIOBUTTON) {
 			model.setUseIframe(true);
+			model.setUseNewTab(false);
 		}
 		else if(actionCommand == MultiStepCSRFPOCWindow.XHR_RADIOBUTTON) {
 			model.setUseXhr(true);
+			model.setUseForm(false);
 		}
 		else if(actionCommand == MultiStepCSRFPOCWindow.FORM_RADIOBUTTON) {
 			model.setUseForm(true);
+			model.setUseXhr(false);
 		}
-		else if(actionCommand == MultiStepCSRFPOCWindow.ALLOWSCRIPTS_CHECKBOX) {
+		else if(actionCommand == MultiStepCSRFPOCWindow.ALLOW_SCRIPTS_CHECKBOX) {
 			JCheckBox checkBox = (JCheckBox)actionEvent.getSource();
 			if(checkBox.isSelected())
 				model.setAllowScripts(true);
+			else
+				model.setAllowScripts(false);
 		}
-		else if(actionCommand == MultiStepCSRFPOCWindow.AUTOSUBMIT_CHECKBOX) {
+		else if(actionCommand == MultiStepCSRFPOCWindow.AUTO_SUBMIT_CHECKBOX) {
 			JCheckBox checkBox = (JCheckBox)actionEvent.getSource();
 			if(checkBox.isSelected())
-				model.setAutoSubmit(true);			
+				model.setAutoSubmit(true);
+			else
+				model.setAutoSubmit(false);
 		}
 		else if(actionCommand == MultiStepCSRFPOCWindow.REGENERATE_BUTTON) {
 			client.regenerateClicked(model.getCsrfPOCConfig(), model.getRequests());

@@ -12,7 +12,6 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextPane;
 import javax.swing.ListSelectionModel;
-import javax.swing.UIManager;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableModel;
 import javax.swing.JCheckBox;
@@ -32,8 +31,8 @@ public class MultiStepCSRFPOCWindow {
 	public static final String IFRAME_RADIOBUTTON = "iframe";
 	public static final String FORM_RADIOBUTTON = "form";
 	public static final String XHR_RADIOBUTTON = "XHR";
-	public static final String ALLOWSCRIPTS_CHECKBOX = "allow scripts";
-	public static final String AUTOSUBMIT_CHECKBOX = "auto submit";
+	public static final String ALLOW_SCRIPTS_CHECKBOX = "allow scripts";
+	public static final String AUTO_SUBMIT_CHECKBOX = "auto submit";
 	
 	//carries the buttons for which we need to register
 	//listeners for
@@ -213,9 +212,9 @@ public class MultiStepCSRFPOCWindow {
 	}
 	private JCheckBox getAllowScriptsCheckBox() {
 		if (allowScriptsCheckBox == null) {
-			allowScriptsCheckBox = new JCheckBox(ALLOWSCRIPTS_CHECKBOX);
+			allowScriptsCheckBox = new JCheckBox(ALLOW_SCRIPTS_CHECKBOX);
 			allowScriptsCheckBox.setBounds(690, 155, 129, 23);
-			buttons.put(DOWN_BUTTON, downButton);
+			buttons.put(ALLOW_SCRIPTS_CHECKBOX, allowScriptsCheckBox);
 		}
 		return allowScriptsCheckBox;
 	}
@@ -288,9 +287,9 @@ public class MultiStepCSRFPOCWindow {
 	}
 	private JCheckBox getAutoSubmitCheckBox() {
 		if (autoSubmitCheckBox == null) {
-			autoSubmitCheckBox = new JCheckBox(AUTOSUBMIT_CHECKBOX);
+			autoSubmitCheckBox = new JCheckBox(AUTO_SUBMIT_CHECKBOX);
 			autoSubmitCheckBox.setBounds(690, 311, 129, 23);
-			buttons.put(AUTOSUBMIT_CHECKBOX, autoSubmitCheckBox);
+			buttons.put(AUTO_SUBMIT_CHECKBOX, autoSubmitCheckBox);
 		}
 		return autoSubmitCheckBox;
 	}
