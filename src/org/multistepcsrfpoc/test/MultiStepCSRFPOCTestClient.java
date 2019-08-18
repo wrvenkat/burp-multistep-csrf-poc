@@ -1,13 +1,24 @@
 package org.multistepcsrfpoc.test;
 
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Set;
 
-import org.multistepcsrfpoc.controller.client.MultiStepCSRFPOCClient;
+import org.multistepcsrfpoc.controller.client.MultiStepCSRFPOCClientInterface;
+import org.multistepcsrfpoc.main.MultiStepCSRFPOC;
 import org.multistepcsrfpoc.model.CSRFPOCConfigModel;
 import org.multistepcsrfpoc.model.RequestModel;
 
-public class MultiStepCSRFPOCTestClient implements MultiStepCSRFPOCClient {
-
+public class MultiStepCSRFPOCTestClient implements MultiStepCSRFPOCClientInterface {
+	private HashMap<String, MultiStepCSRFPOC> activePOCs;
+	
+	public MultiStepCSRFPOCTestClient() {
+		this.activePOCs = new HashMap<String, MultiStepCSRFPOC>();
+	}
+	
 	@Override
 	public String regenerateClicked(CSRFPOCConfigModel csrfPOCConfig, ArrayList<RequestModel> requests) {
 		System.out.println("Regenerate Button Clicked!");
@@ -20,11 +31,40 @@ public class MultiStepCSRFPOCTestClient implements MultiStepCSRFPOCClient {
 							"Use Form: "+csrfPOCConfig.isUseForm()+"\n"+
 							"Auto Submit: "+csrfPOCConfig.isAutoSubmit()							
 						  );
+		
+		//call the request_parser on all the requests
+
+		//call the request_builder on all the requests
 		return "<NEW CSRF POC>";
 	}
 
 	@Override
-	public void copyHTMLClicked(String csrfPOCText) {
-		System.out.println("Copy HTML button clicked. Returned text is "+csrfPOCText);
+	public void copyHTMLClicked(String csrfPOCText) {		
+		if (csrfPOCText != null && csrfPOCText.length() > 0) {
+			Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+			clipboard.setContents(new StringSelection(csrfPOCText), null);
+		}
 	}
+
+	@Override
+	public Set<String> getActivePOCs() {
+		// TODO implement returning active POCs
+		return this.activePOCs.keySet();
+	}
+
+	@Override
+	public void csrfPOCWindowClosed(String title) {
+		this.activePOCs.remove(title);
+		System.out.println("CSRF POC window closed!");
+	}
+
+	@Override
+	public void createCSRFPOCWindow(ArrayList<RequestModel> requests) {
+		System.out.println("Generate new Multi-Step CSRF POC clicked!");
+	}
+	
+	@Override
+	public void addToPOC(String title, ArrayList<RequestModel> requests) {
+		System.out.println("addToPOC clicked!");
+	}	
 }

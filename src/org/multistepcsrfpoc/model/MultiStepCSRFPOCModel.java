@@ -36,11 +36,11 @@ public class MultiStepCSRFPOCModel {
 	}
 	
 	/*Gets the request for the selected row*/
-	public String getSelectedRequest(int row) {
+	public byte[] getSelectedRequest(int row) {
 		return tableModel.getSelectedRequest(row);
 	}
 	
-	public void setSelectedRequest(int row, String request) {
+	public void setSelectedRequest(int row, byte[] request) {
 		tableModel.setSelectedRequest(row, request);
 	}
 

@@ -4,7 +4,7 @@ import java.awt.EventQueue;
 import java.util.ArrayList;
 
 import org.multistepcsrfpoc.controller.MultiStepCSRFPOCController;
-import org.multistepcsrfpoc.controller.client.MultiStepCSRFPOCClient;
+import org.multistepcsrfpoc.controller.client.MultiStepCSRFPOCClientInterface;
 import org.multistepcsrfpoc.model.CSRFPOCConfigModel;
 import org.multistepcsrfpoc.model.MultiStepCSRFPOCModel;
 import org.multistepcsrfpoc.model.RequestModel;
@@ -13,9 +13,9 @@ import org.multistepcsrfpoc.view.MultiStepCSRFPOCWindow;
 
 public class MultiStepCSRFPOC {
 	private MultiStepCSRFPOCWindow view;
-	private MultiStepCSRFPOCModel model;	
+	private MultiStepCSRFPOCModel model;
 	
-	public MultiStepCSRFPOC(String title, ArrayList<RequestModel> requestList, MultiStepCSRFPOCClient client) {
+	public MultiStepCSRFPOC(String title, ArrayList<RequestModel> requestList, MultiStepCSRFPOCClientInterface client) {
 		this.view = new MultiStepCSRFPOCWindow(title);
 		this.model = new MultiStepCSRFPOCModel(new RequestsTableModel(requestList), new CSRFPOCConfigModel());
 		//connect the controller with the model and the client

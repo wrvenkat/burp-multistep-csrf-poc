@@ -2,6 +2,8 @@ package org.multistepcsrfpoc.view;
 
 import java.util.HashMap;
 import java.awt.Dimension;
+import java.awt.event.WindowListener;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -14,6 +16,8 @@ import javax.swing.JTextPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableModel;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.StyledDocument;
 import javax.swing.JCheckBox;
 import javax.swing.JRadioButton;
 import javax.swing.JSeparator;
@@ -66,6 +70,8 @@ public class MultiStepCSRFPOCWindow {
 	private JCheckBox autoSubmitCheckBox;	
 	private ButtonGroup pocOpenInGroup;
 	private ButtonGroup techniqueButtonGroup;	
+	private JScrollPane msgsScrollPane;
+	private JTextPane txtpnMsgs;
 
 	/**
 	 * Create the application window.
@@ -82,7 +88,7 @@ public class MultiStepCSRFPOCWindow {
 		frame = new JFrame();
 		frame.setTitle(title);
 		frame.setBounds(100, 100, 825, 675);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.setPreferredSize(new Dimension(825,675));
 		mainScrollPane = new JScrollPane(getMainPanel());
 		frame.getContentPane().add(mainScrollPane);		
@@ -130,13 +136,18 @@ public class MultiStepCSRFPOCWindow {
 			mainPanel.add(getFormRadioButton());
 			
 			//CSRF POC text pane
-			mainPanel.add(getCsrfPOCTextPane());
+			//mainPanel.add(getCsrfPOCTextPane());
 			mainPanel.add(getCopyHTMLButton());
 			csrfPOCScrollPane = new JScrollPane(getCsrfPOCTextPane());
-			csrfPOCScrollPane.setBounds(7, 371, 800, 242);
+			csrfPOCScrollPane.setBounds(7, 371, 800, 235);
 			mainPanel.add(csrfPOCScrollPane);
 			mainPanel.add(getSeparator3());
 			mainPanel.add(getAutoSubmitCheckBox());
+			
+			//MSGS text pane
+			msgsScrollPane = new JScrollPane(getTxtpnMsgs());
+			msgsScrollPane.setBounds(7, 610, 675, 55);
+			mainPanel.add(msgsScrollPane);
 		}
 		return mainPanel;
 	}
@@ -182,14 +193,14 @@ public class MultiStepCSRFPOCWindow {
 		if (csrfPOCTextPane == null) {
 			csrfPOCTextPane = new JTextPane();
 			csrfPOCTextPane.setText("CSRF POC");
-			csrfPOCTextPane.setBounds(7, 371, 800, 242);
+			csrfPOCTextPane.setBounds(7, 371, 800, 235);
 		}
 		return csrfPOCTextPane;
 	}
 	private JButton getCopyHTMLButton() {
 		if (copyHTMLButton == null) {
 			copyHTMLButton = new JButton(COPY_HTML_BUTTON);
-			copyHTMLButton.setBounds(364, 630, 117, 25);
+			copyHTMLButton.setBounds(690, 630, 117, 25);
 			buttons.put(COPY_HTML_BUTTON, copyHTMLButton);
 		}		
 		return copyHTMLButton;
@@ -330,6 +341,12 @@ public class MultiStepCSRFPOCWindow {
 			this.getRequestsTable().getSelectionModel().addListSelectionListener(listener);
 	}
 	
+	//registers windowListener
+	public void registerWindowListener(WindowListener listener) {
+		if (listener != null)
+			this.frame.addWindowListener(listener);
+	}
+	
 	//DONE: Implement the necessary methods that update the UI which can be called form the controller
 	public int getSelectedRow() {
 		return requestsTable.getSelectedRow();
@@ -384,5 +401,25 @@ public class MultiStepCSRFPOCWindow {
 	//gets the SelectedRequestTextPane
 	public String getCSRFPOCText() {
 		return csrfPOCTextPane.getText();
+	}
+	
+	private JTextPane getTxtpnMsgs() {
+		if (txtpnMsgs == null) {
+			txtpnMsgs = new JTextPane();
+			txtpnMsgs.setText("msgs");
+			txtpnMsgs.setBounds(7, 610, 675, 54);
+		}
+		return txtpnMsgs;
+	}
+	
+	public void updateMsgs(String msg) {
+		if (msg == null) return;
+		
+		StyledDocument document = (StyledDocument) txtpnMsgs.getDocument();
+	    try {
+			document.insertString(document.getLength(), msg, null);
+		} catch (BadLocationException e) {
+			e.printStackTrace();			
+		}
 	}
 }
