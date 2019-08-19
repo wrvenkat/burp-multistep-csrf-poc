@@ -190,7 +190,7 @@ public class MultiStepCSRFPOCController implements ActionListener, ListSelection
 
 	public void windowClosing(WindowEvent e) {
 		//inform our client that the window is closing
-		System.out.println("Title: "+((Frame)(e.getWindow())).getTitle());
+		//System.out.println("Title: "+((Frame)(e.getWindow())).getTitle());
 		this.client.csrfPOCWindowClosed(((Frame)(e.getWindow())).getTitle());
 	}
 	

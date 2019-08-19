@@ -142,7 +142,7 @@ public class MultiStepCSRFContextMenuHandler implements IContextMenuFactory, Act
 		if (e.getActionCommand().equals(MENU_ITEM_MAIN_NAME))
 			this.generateMultiStepCSRFPOC();
 		else if (e.getActionCommand().startsWith(MultiStepCSRFPOCClient.TITLE_STRING)) {
-			System.out.println("Menu item clicked is "+e.getActionCommand());
+			//System.out.println("Menu item clicked is "+e.getActionCommand());
 			MultiStepCSRFPOCClient.getClient().addToPOC(e.getActionCommand(), this.getRequests());
 		}
 	}

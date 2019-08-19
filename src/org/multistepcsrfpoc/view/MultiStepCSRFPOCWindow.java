@@ -18,6 +18,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableModel;
 import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultCaret;
 import javax.swing.text.StyledDocument;
 import javax.swing.JCheckBox;
 import javax.swing.JRadioButton;
@@ -163,6 +164,8 @@ public class MultiStepCSRFPOCWindow {
 			selectedRequestTextPane.setText("HTML");
 			selectedRequestTextPane.setBounds(7, 159, 676, 188);
 		}
+		DefaultCaret caret = (DefaultCaret) selectedRequestTextPane.getCaret();
+		caret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
 		return selectedRequestTextPane;
 	}
 	private JButton getRegenerateButton() {

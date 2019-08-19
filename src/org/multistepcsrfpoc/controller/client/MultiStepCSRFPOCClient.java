@@ -66,8 +66,7 @@ public class MultiStepCSRFPOCClient implements MultiStepCSRFPOCClientInterface {
 	}
 
 	@Override
-	public void copyHTMLClicked(String csrfPOCText) {
-		System.out.println("Copy HTML button clicked. Returned text is "+csrfPOCText);
+	public void copyHTMLClicked(String csrfPOCText) {		
 		if (csrfPOCText != null && csrfPOCText.length() > 0) {
 			Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 			clipboard.setContents(new StringSelection(csrfPOCText), null);
@@ -77,15 +76,15 @@ public class MultiStepCSRFPOCClient implements MultiStepCSRFPOCClientInterface {
 	@Override
 	public Set<String> getActivePOCs() {
 		
-		for (String key: this.activePOCs.keySet())
-			System.out.println("Key: "+key+" value: "+this.activePOCs.get(key).toString());
+		/*for (String key: this.activePOCs.keySet())
+			System.out.println("Key: "+key+" value: "+this.activePOCs.get(key).toString());*/
 		
 		return this.activePOCs.keySet();
 	}
 
 	@Override
 	public void createCSRFPOCWindow(ArrayList<RequestModel> requests) {
-		System.out.println("Generate new Multi-Step CSRF POC clicked!");
+		//System.out.println("Generate new Multi-Step CSRF POC clicked!");
 		
 		//create title and spawn the UI
 		String title = TITLE_STRING+(this.activePOCCount+1);
