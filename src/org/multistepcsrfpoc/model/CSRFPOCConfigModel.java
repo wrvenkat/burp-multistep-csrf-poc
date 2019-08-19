@@ -5,7 +5,7 @@ public class CSRFPOCConfigModel {
 	private boolean useNewTab;
 	private boolean useXhr;
 	private boolean useForm;
-	private boolean allowScripts;
+	private boolean useJQuery;
 	private boolean autoSubmit;
 	
 	public CSRFPOCConfigModel() {
@@ -15,7 +15,7 @@ public class CSRFPOCConfigModel {
 		//default config
 		this.useXhr = true;
 		this.useForm = false;
-		this.allowScripts = true;
+		this.useJQuery = false;
 		//default config
 		this.autoSubmit = true;
 	}
@@ -52,12 +52,12 @@ public class CSRFPOCConfigModel {
 		this.useForm = useForm;
 	}
 
-	public boolean isAllowScripts() {
-		return allowScripts;
+	public boolean isUseJQuery() {
+		return useJQuery;
 	}
 
-	public void setAllowScripts(boolean allowScripts) {
-		this.allowScripts = allowScripts;
+	public void setUseJQuery(boolean useJQuery) {
+		this.useJQuery = useJQuery;
 	}
 
 	public boolean isAutoSubmit() {

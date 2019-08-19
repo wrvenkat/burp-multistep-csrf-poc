@@ -16,10 +16,11 @@ public class MultiStepCSRFPOC {
 	private MultiStepCSRFPOCModel model;
 	
 	public MultiStepCSRFPOC(String title, ArrayList<RequestModel> requestList, MultiStepCSRFPOCClientInterface client) {
-		this.view = new MultiStepCSRFPOCWindow(title);
+		this.view = new MultiStepCSRFPOCWindow(title);		
 		this.model = new MultiStepCSRFPOCModel(new RequestsTableModel(requestList), new CSRFPOCConfigModel());
 		//connect the controller with the model and the client
-		MultiStepCSRFPOCController.connect(model, view, client);
+		MultiStepCSRFPOCController controller = MultiStepCSRFPOCController.connect(model, view, client);
+		client.setController(controller);
 		MultiStepCSRFPOC.showUI(this.view);
 	}
 	

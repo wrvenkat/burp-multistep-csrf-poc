@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
+import org.multistepcsrfpoc.controller.MultiStepCSRFPOCController;
 import org.multistepcsrfpoc.main.MultiStepCSRFPOC;
 import org.multistepcsrfpoc.model.CSRFPOCConfigModel;
 import org.multistepcsrfpoc.model.RequestModel;
@@ -28,6 +29,8 @@ public interface MultiStepCSRFPOCClientInterface {
 	
 	/*Creates a new MultiStepCSRFPOC client*/
 	public void createCSRFPOCWindow(ArrayList<RequestModel> requests);
+	
+	public void setController(MultiStepCSRFPOCController controller);
 	
 	/*Adds to existing POC window*/
 	public void addToPOC(String title, ArrayList<RequestModel> requests);

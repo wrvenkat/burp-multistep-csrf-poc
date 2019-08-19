@@ -14,6 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextPane;
 import javax.swing.ListSelectionModel;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableModel;
 import javax.swing.text.BadLocationException;
@@ -35,7 +36,7 @@ public class MultiStepCSRFPOCWindow {
 	public static final String IFRAME_RADIOBUTTON = "iframe";
 	public static final String FORM_RADIOBUTTON = "form";
 	public static final String XHR_RADIOBUTTON = "XHR";
-	public static final String ALLOW_SCRIPTS_CHECKBOX = "allow scripts";
+	public static final String JQUERY_RADIOBUTTON = "jQuery";
 	public static final String AUTO_SUBMIT_CHECKBOX = "auto submit";
 	
 	//carries the buttons for which we need to register
@@ -56,15 +57,14 @@ public class MultiStepCSRFPOCWindow {
 	private JButton copyHTMLButton;
 	private JButton upButton;
 	private JButton downButton;
-	private JCheckBox allowScriptsCheckBox;
 	private JRadioButton newTabRadioButton;
 	private JRadioButton iframeRadioButton;
-	private JSeparator separator1;
 	private JLabel pocOpensInLabel;
 	private JSeparator separator2;
 	private JLabel techniqueLabel;
 	private JRadioButton xhrRadioButton;
 	private JRadioButton formRadioButton;
+	private JRadioButton jqueryRadioButton;
 	private JScrollPane csrfPOCScrollPane;
 	private JSeparator separator3;
 	private JCheckBox autoSubmitCheckBox;	
@@ -91,7 +91,8 @@ public class MultiStepCSRFPOCWindow {
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.setPreferredSize(new Dimension(825,675));
 		mainScrollPane = new JScrollPane(getMainPanel());
-		frame.getContentPane().add(mainScrollPane);		
+		frame.getContentPane().add(mainScrollPane);
+		this.getRequestsTable().getSelectionModel().setValueIsAdjusting(true);
 	}
 	
 	private JPanel getMainPanel() {
@@ -111,10 +112,6 @@ public class MultiStepCSRFPOCWindow {
 			mainPanel.add(getDownButton());
 			mainPanel.add(getSelectedRequestLabel());			
 			mainPanel.add(getCsrfPOCLabel());
-			
-			//selected request text pane			
-			mainPanel.add(getAllowScriptsCheckBox());
-			mainPanel.add(getSeparator1());
 			mainPanel.add(getPocOpensInLabel());
 			selectedRequestScrollPane = new JScrollPane(getSelectedRequestTextPane());
 			selectedRequestScrollPane.setBounds(7, 159, 676, 188);
@@ -131,9 +128,13 @@ public class MultiStepCSRFPOCWindow {
 			techniqueButtonGroup = new ButtonGroup();
 			techniqueButtonGroup.add(getXhrRadioButton());
 			techniqueButtonGroup.add(getFormRadioButton());
+			techniqueButtonGroup.add(getJqueryRadioButton());
 			mainPanel.add(getXhrRadioButton());
-			mainPanel.add(getRegenerateButton());
 			mainPanel.add(getFormRadioButton());
+			mainPanel.add(getJqueryRadioButton());
+			mainPanel.add(getSeparator3());
+			mainPanel.add(getAutoSubmitCheckBox());
+			mainPanel.add(getRegenerateButton());
 			
 			//CSRF POC text pane
 			//mainPanel.add(getCsrfPOCTextPane());
@@ -141,8 +142,6 @@ public class MultiStepCSRFPOCWindow {
 			csrfPOCScrollPane = new JScrollPane(getCsrfPOCTextPane());
 			csrfPOCScrollPane.setBounds(7, 371, 800, 235);
 			mainPanel.add(csrfPOCScrollPane);
-			mainPanel.add(getSeparator3());
-			mainPanel.add(getAutoSubmitCheckBox());
 			
 			//MSGS text pane
 			msgsScrollPane = new JScrollPane(getTxtpnMsgs());
@@ -221,18 +220,10 @@ public class MultiStepCSRFPOCWindow {
 		}
 		return downButton;
 	}
-	private JCheckBox getAllowScriptsCheckBox() {
-		if (allowScriptsCheckBox == null) {
-			allowScriptsCheckBox = new JCheckBox(ALLOW_SCRIPTS_CHECKBOX);
-			allowScriptsCheckBox.setBounds(690, 155, 129, 23);
-			buttons.put(ALLOW_SCRIPTS_CHECKBOX, allowScriptsCheckBox);
-		}
-		return allowScriptsCheckBox;
-	}
 	private JRadioButton getNewTabRadioButton() {
 		if (newTabRadioButton == null) {
 			newTabRadioButton = new JRadioButton(NEW_TAB_RADIOBUTTON);
-			newTabRadioButton.setBounds(700, 200, 149, 23);
+			newTabRadioButton.setBounds(700, 170, 149, 23);
 			buttons.put(NEW_TAB_RADIOBUTTON, newTabRadioButton);
 		}
 		return newTabRadioButton;
@@ -240,43 +231,36 @@ public class MultiStepCSRFPOCWindow {
 	private JRadioButton getIframeRadioButton() {
 		if (iframeRadioButton == null) {
 			iframeRadioButton = new JRadioButton(IFRAME_RADIOBUTTON);
-			iframeRadioButton.setBounds(700, 218, 149, 23);
+			iframeRadioButton.setBounds(700, 188, 149, 23);
 			buttons.put(IFRAME_RADIOBUTTON, iframeRadioButton);
 		}
 		return iframeRadioButton;
 	}
-	private JSeparator getSeparator1() {
-		if (separator1 == null) {
-			separator1 = new JSeparator();
-			separator1.setBounds(690, 180, 114, 2);
-		}
-		return separator1;
-	}
 	private JLabel getPocOpensInLabel() {
 		if (pocOpensInLabel == null) {
 			pocOpensInLabel = new JLabel("Response In:");
-			pocOpensInLabel.setBounds(690, 185, 125, 15);
+			pocOpensInLabel.setBounds(690, 155, 125, 15);
 		}
 		return pocOpensInLabel;
 	}
 	private JSeparator getSeparator2() {
 		if (separator2 == null) {
 			separator2 = new JSeparator();
-			separator2.setBounds(690, 243, 114, 2);
+			separator2.setBounds(690, 218, 114, 2);
 		}
 		return separator2;
 	}
 	private JLabel getTechniqueLabel() {
 		if (techniqueLabel == null) {
 			techniqueLabel = new JLabel("Technique:");
-			techniqueLabel.setBounds(690, 249, 125, 15);
+			techniqueLabel.setBounds(690, 223, 125, 15);
 		}
 		return techniqueLabel;
 	}
 	private JRadioButton getXhrRadioButton() {
 		if (xhrRadioButton == null) {
 			xhrRadioButton = new JRadioButton(XHR_RADIOBUTTON);
-			xhrRadioButton.setBounds(700, 263, 149, 23);
+			xhrRadioButton.setBounds(700, 237, 149, 23);
 			buttons.put(XHR_RADIOBUTTON, xhrRadioButton);
 		}
 		return xhrRadioButton;
@@ -284,22 +268,31 @@ public class MultiStepCSRFPOCWindow {
 	private JRadioButton getFormRadioButton() {
 		if (formRadioButton == null) {
 			formRadioButton = new JRadioButton(FORM_RADIOBUTTON);
-			formRadioButton.setBounds(700, 283, 149, 23);
+			formRadioButton.setBounds(700, 257, 149, 23);
 			buttons.put(FORM_RADIOBUTTON, formRadioButton);
 		}
 		return formRadioButton;
 	}
+	private JRadioButton getJqueryRadioButton() {
+		if (jqueryRadioButton == null) {
+			jqueryRadioButton = new JRadioButton(JQUERY_RADIOBUTTON);
+			jqueryRadioButton.setBounds(700, 277, 149, 23);
+			buttons.put(JQUERY_RADIOBUTTON, jqueryRadioButton);
+			
+		}
+		return jqueryRadioButton;
+	}	
 	private JSeparator getSeparator3() {
 		if (separator3 == null) {
 			separator3 = new JSeparator();
-			separator3.setBounds(690, 307, 114, 2);
+			separator3.setBounds(690, 302, 114, 2);
 		}
 		return separator3;
 	}
 	private JCheckBox getAutoSubmitCheckBox() {
 		if (autoSubmitCheckBox == null) {
 			autoSubmitCheckBox = new JCheckBox(AUTO_SUBMIT_CHECKBOX);
-			autoSubmitCheckBox.setBounds(690, 311, 129, 23);
+			autoSubmitCheckBox.setBounds(690, 306, 129, 23);
 			buttons.put(AUTO_SUBMIT_CHECKBOX, autoSubmitCheckBox);
 		}
 		return autoSubmitCheckBox;
@@ -347,6 +340,11 @@ public class MultiStepCSRFPOCWindow {
 			this.frame.addWindowListener(listener);
 	}
 	
+	public void registerDocumentListener(DocumentListener listener) {
+		if (listener != null)
+			this.selectedRequestTextPane.getDocument().addDocumentListener(listener);
+	}
+	
 	//DONE: Implement the necessary methods that update the UI which can be called form the controller
 	public int getSelectedRow() {
 		return requestsTable.getSelectedRow();
@@ -354,22 +352,19 @@ public class MultiStepCSRFPOCWindow {
 	
 	public void setVisible() {
 		this.frame.setVisible(true);		
-	}
+	}		
 	
-	//sets allow script radio button to true
-	public void setAllowScript(Boolean value) {
-		this.allowScriptsCheckBox.setSelected(value);
-	}
-	
-	//sets allow script radio button to true
 	public void setIframe(Boolean value) {
 		this.iframeRadioButton.setSelected(value);
 	}
-	
-	//sets allow script radio button to true
+		
 	public void setXhr(Boolean value) {
 		this.xhrRadioButton.setSelected(value);
-	}		
+	}
+	
+	public void setJQuery(Boolean value) {
+		this.jqueryRadioButton.setSelected(value);
+	}
 	
 	//sets iframe radio button to true
 	public void setAutoSubmit(Boolean value) {
@@ -406,7 +401,7 @@ public class MultiStepCSRFPOCWindow {
 	private JTextPane getTxtpnMsgs() {
 		if (txtpnMsgs == null) {
 			txtpnMsgs = new JTextPane();
-			txtpnMsgs.setText("msgs");
+			txtpnMsgs.setText("msgs\n");
 			txtpnMsgs.setBounds(7, 610, 675, 54);
 		}
 		return txtpnMsgs;
@@ -415,11 +410,12 @@ public class MultiStepCSRFPOCWindow {
 	public void updateMsgs(String msg) {
 		if (msg == null) return;
 		
+		msg += "\n";
 		StyledDocument document = (StyledDocument) txtpnMsgs.getDocument();
 	    try {
 			document.insertString(document.getLength(), msg, null);
 		} catch (BadLocationException e) {
 			e.printStackTrace();			
 		}
-	}
+	}	
 }

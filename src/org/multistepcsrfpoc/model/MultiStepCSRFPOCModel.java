@@ -84,12 +84,12 @@ public class MultiStepCSRFPOCModel {
 		csrfPOCConfig.setUseForm(useForm);
 	}
 
-	public boolean isAllowScripts() {
-		return csrfPOCConfig.isAllowScripts();
+	public boolean isUseJQuery() {
+		return csrfPOCConfig.isUseJQuery();
 	}
 
-	public void setAllowScripts(boolean allowScripts) {
-		csrfPOCConfig.setAllowScripts(allowScripts);
+	public void setUseJQuery(boolean useJquery) {
+		csrfPOCConfig.setUseJQuery(useJquery);
 	}
 
 	public boolean isAutoSubmit() {
@@ -109,7 +109,7 @@ public class MultiStepCSRFPOCModel {
 	}
 
 	public String getSelectedRequestText() {
-		return selectedRequestText;
+		return this.selectedRequestText;
 	}
 
 	public String getCsrfPOCText() {

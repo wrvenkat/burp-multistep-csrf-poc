@@ -7,6 +7,8 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
 import javax.swing.JCheckBox;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -20,13 +22,13 @@ import org.multistepcsrfpoc.view.MultiStepCSRFPOCWindow;
  * 
  *  TODO: The above can be implemented when required.
  * */
-public class MultiStepCSRFPOCController implements ActionListener, ListSelectionListener, WindowListener {			
+public class MultiStepCSRFPOCController implements ActionListener, ListSelectionListener, WindowListener, DocumentListener {			
 	private MultiStepCSRFPOCClientInterface client;
 	private MultiStepCSRFPOCModel model;
 	private MultiStepCSRFPOCWindow view;
+	private int selectedRow;	
 	
-	private MultiStepCSRFPOCController() {
-		
+	private MultiStepCSRFPOCController() {		
 	}
 	
 	/*Accepts a client and returns an instance*/
@@ -42,7 +44,7 @@ public class MultiStepCSRFPOCController implements ActionListener, ListSelection
 		view.registerHandler(controller);
 		view.registerTableModel(model.getTableModel());
 		view.registerRowSelectionListener(controller);
-		view.registerWindowListener(controller);
+		view.registerWindowListener(controller);		
 	
 		//initializes the UI based on default model values
 		controller.initView();
@@ -53,6 +55,9 @@ public class MultiStepCSRFPOCController implements ActionListener, ListSelection
 			model.setSelectedRequestText(new String(model.getSelectedRequest(0)));
 			view.setSelectedRequestText(model.getSelectedRequestText());
 		}
+		
+		//register the document listener last
+		view.registerDocumentListener(controller);
 		return controller;
 	}
 	
@@ -60,9 +65,6 @@ public class MultiStepCSRFPOCController implements ActionListener, ListSelection
 	 * Sets the default values for the View
 	 * */
 	public void initView() {
-		if(model.isAllowScripts())
-			view.setAllowScript(true);
-		
 		if(model.isUseIframe())
 			view.setIframe(true);
 		else
@@ -82,6 +84,11 @@ public class MultiStepCSRFPOCController implements ActionListener, ListSelection
 		view.setCSRFPOCText(model.getCsrfPOCText());
 	}	
 	
+	public void updateMsgs(String msg) {
+		if (msg != null)
+			view.updateMsgs(msg);
+	}
+	
 	/*
 	 * Here comes the event listener method
 	 * */	
@@ -90,7 +97,7 @@ public class MultiStepCSRFPOCController implements ActionListener, ListSelection
 		String actionCommand = actionEvent.getActionCommand();
 		
 		//update the UI directly for msgs
-		view.updateMsgs("received event: "+actionEvent.toString()+"\n");
+		//view.updateMsgs("received event: "+actionEvent.toString()+"\n");
 		if(actionCommand == MultiStepCSRFPOCWindow.UP_BUTTON) {
 			int rowIndex = view.getSelectedRow();
 			if(rowIndex > -1) {
@@ -131,17 +138,17 @@ public class MultiStepCSRFPOCController implements ActionListener, ListSelection
 		else if(actionCommand == MultiStepCSRFPOCWindow.XHR_RADIOBUTTON) {
 			model.setUseXhr(true);
 			model.setUseForm(false);
+			model.setUseJQuery(false);
 		}
 		else if(actionCommand == MultiStepCSRFPOCWindow.FORM_RADIOBUTTON) {
 			model.setUseForm(true);
 			model.setUseXhr(false);
+			model.setUseJQuery(false);
 		}
-		else if(actionCommand == MultiStepCSRFPOCWindow.ALLOW_SCRIPTS_CHECKBOX) {
-			JCheckBox checkBox = (JCheckBox)actionEvent.getSource();
-			if(checkBox.isSelected())
-				model.setAllowScripts(true);
-			else
-				model.setAllowScripts(false);
+		else if(actionCommand == MultiStepCSRFPOCWindow.JQUERY_RADIOBUTTON) {
+			model.setUseJQuery(true);
+			model.setUseForm(false);
+			model.setUseXhr(false);			
 		}
 		else if(actionCommand == MultiStepCSRFPOCWindow.AUTO_SUBMIT_CHECKBOX) {
 			JCheckBox checkBox = (JCheckBox)actionEvent.getSource();
@@ -166,13 +173,16 @@ public class MultiStepCSRFPOCController implements ActionListener, ListSelection
 	
 	@Override
 	public void valueChanged(ListSelectionEvent event) {
-		int selectedRow = view.getRequestsTable().getSelectedRow();
-		if(selectedRow == -1) return;
+		selectedRow = view.getRequestsTable().getSelectedRow();
+		if(selectedRow == -1) return;		
 		
 		//update the UI directly for msgs
-		view.updateMsgs("received event: "+event.toString()+"\n");
-		
-		//update the model
+		//view.updateMsgs("received event: "+event.toString()+"\n");		
+				
+		/*String currentRequestText = view.getSelectedRequestText();
+		//update the requests model
+		model.setSelectedRequest(selectedRow, currentRequestText.getBytes());*/
+		//update the UI model
 		model.setSelectedRequestText(new String(model.getSelectedRequest(selectedRow)));
 		//update the view
 		view.setSelectedRequestText(model.getSelectedRequestText());
@@ -182,6 +192,14 @@ public class MultiStepCSRFPOCController implements ActionListener, ListSelection
 		//inform our client that the window is closing
 		System.out.println("Title: "+((Frame)(e.getWindow())).getTitle());
 		this.client.csrfPOCWindowClosed(((Frame)(e.getWindow())).getTitle());
+	}
+	
+	public void removeUpdate(DocumentEvent e) {		
+		model.setSelectedRequest(selectedRow, view.getSelectedRequestText().getBytes());		
+	}
+	
+	public void insertUpdate(DocumentEvent e) {		
+		model.setSelectedRequest(selectedRow, view.getSelectedRequestText().getBytes());
 	}
 	
 	/*Autogenerated stubs*/
@@ -218,6 +236,11 @@ public class MultiStepCSRFPOCController implements ActionListener, ListSelection
 	@Override
 	public void windowOpened(WindowEvent e) {
 		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void changedUpdate(DocumentEvent e) {
 		
 	}
 }

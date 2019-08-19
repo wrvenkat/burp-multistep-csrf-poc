@@ -10,7 +10,7 @@ public class RequestsTableModel extends AbstractTableModel {
 	private static final int COLUMN_COUNT = 3;
 	private static final String[] COLUMN_NAMES = {"No.", "Method", "Request URL"};
 	private ArrayList<RequestModel> requests;
-	private HashMap<Integer, Integer> rowToRequestNoMap;
+	private HashMap<Integer, Integer> rowToRequestNoMap;	
 	
 	public RequestsTableModel(ArrayList<RequestModel> requestList) {
 		if(requestList != null && !requestList.isEmpty()) {
@@ -20,7 +20,7 @@ public class RequestsTableModel extends AbstractTableModel {
 				if(this.rowToRequestNoMap == null)
 					this.rowToRequestNoMap = new HashMap<Integer, Integer>();				
 				this.rowToRequestNoMap.put(index-1, index);
-			}
+			}			
 		}
 		//otherwise empty rows
 		else {
@@ -38,7 +38,7 @@ public class RequestsTableModel extends AbstractTableModel {
 				currMax = value;			
 		}		
 		return currMax+1;
-	}	
+	}
 	
 	//updates the row No to Request No map starting at the row
 	//returns the last row index
@@ -122,14 +122,15 @@ public class RequestsTableModel extends AbstractTableModel {
 	}
 	
 	//returns the request associated with the request
-	public byte[] getSelectedRequest(int row) {
+	public byte[] getSelectedRequest(int row) {	
 		if (row < 0 || row >= requests.size()) return null;
 		return requests.get(row).getRequest();
 	}
 	
 	//sets the request of the selected row	
 	public void setSelectedRequest(int row, byte[] request) {
-		if (row <= 0 || row >= requests.size()) return;
+		if (row < 0 || row >= requests.size()) return;
+				
 		requests.get(row).setRequest(request);
 	}
 	
@@ -164,7 +165,7 @@ public class RequestsTableModel extends AbstractTableModel {
 		switch (column) {
 			//request index column 
 			case 0:
-				return rowToRequestNoMap.get(rowIndex);		
+				return rowToRequestNoMap.get(rowIndex);
 			//request method
 			case 1:
 				return request.getHttpMethod();

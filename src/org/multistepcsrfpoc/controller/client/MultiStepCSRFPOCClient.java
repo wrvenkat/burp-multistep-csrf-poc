@@ -7,22 +7,23 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
+import org.multistepcsrfpoc.controller.MultiStepCSRFPOCController;
 import org.multistepcsrfpoc.controller.client.MultiStepCSRFPOCClientInterface;
 import org.multistepcsrfpoc.main.MultiStepCSRFPOC;
 import org.multistepcsrfpoc.model.CSRFPOCConfigModel;
 import org.multistepcsrfpoc.model.RequestModel;
 
-import request_parser.http.request$py;
-
 public class MultiStepCSRFPOCClient implements MultiStepCSRFPOCClientInterface {
 	private int activePOCCount;
 	private HashMap<String, MultiStepCSRFPOC> activePOCs;
 	private static MultiStepCSRFPOCClient client;
-	
+	private MultiStepCSRFPOCController controller;	
+
 	public static final String TITLE_STRING = "Enhanced CSRF POC ";
 	
 	public MultiStepCSRFPOCClient() {
 		this.activePOCs = new HashMap<String, MultiStepCSRFPOC>();
+		this.controller = null;
 	}
 
 	/*Returns the instance of itself*/
@@ -35,24 +36,33 @@ public class MultiStepCSRFPOCClient implements MultiStepCSRFPOCClientInterface {
 	}
 	
 	@Override
+	public void setController(MultiStepCSRFPOCController controller) {
+		this.controller = controller;
+	}
+	
+	@Override
 	public String regenerateClicked(CSRFPOCConfigModel csrfPOCConfig, ArrayList<RequestModel> requests) {
 		System.out.println("Regenerate Button Clicked!");
 		System.out.println("\n"+
-							"CSRF POC Config is "+"\n"+
-							"Allow Scripts: "+csrfPOCConfig.isAllowScripts()+"\n"+
+							"CSRF POC Config is "+"\n"+							
 							"Use new tab: "+csrfPOCConfig.isUseNewTab()+"\n"+
 							"Use Iframe: "+csrfPOCConfig.isUseIframe()+"\n"+							
 							"Use XHR: "+csrfPOCConfig.isUseXhr()+"\n"+
 							"Use Form: "+csrfPOCConfig.isUseForm()+"\n"+
+							"Use jQuery: "+csrfPOCConfig.isUseJQuery()+"\n"+
 							"Auto Submit: "+csrfPOCConfig.isAutoSubmit()							
 						  );
 		try {
-			//call the request_parser on all the requests
-			ArrayList<request$py> parserRequests = new ArrayList<request$py>();
+			//call the request_parser on all the requests			
 	
-			//call the request_builder on all the requests
-			return "<NEW CSRF POC>";
+			//call the request_builder on all the requests			
 		}
+		catch (Exception e) {
+			e.printStackTrace();
+			this.controller.updateMsgs(e.toString());
+			return "";
+		}
+		return "<NEW CSRF POC>";
 	}
 
 	@Override
@@ -85,7 +95,7 @@ public class MultiStepCSRFPOCClient implements MultiStepCSRFPOCClientInterface {
 		this.activePOCs.put(title, newPOC);
 		
 		//increase count
-		this.activePOCCount++;		
+		this.activePOCCount++;
 	}
 	
 	@Override
