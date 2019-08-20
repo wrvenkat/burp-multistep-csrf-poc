@@ -308,7 +308,6 @@ public class MultiStepCSRFPOCWindow {
 		if(requestsTable == null) {
 			requestsTable = new JTable();
 			requestsTable.setBounds(7, 7, 676, 118);
-			requestsTable.setPreferredSize(new Dimension(676, 118));
 			
 			//set the selection mode to Single Interval selection which only allows
 			//contiguous rows selection
