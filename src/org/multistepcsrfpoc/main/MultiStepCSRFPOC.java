@@ -35,4 +35,10 @@ public class MultiStepCSRFPOC {
 			}
 		});
 	}
+	
+	public void addToPOC(ArrayList<RequestModel> requests) {
+		for (RequestModel request: requests)
+			this.model.addRow(request);
+	}
+
 }

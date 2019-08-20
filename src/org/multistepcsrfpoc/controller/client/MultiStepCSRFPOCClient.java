@@ -104,7 +104,6 @@ public class MultiStepCSRFPOCClient implements MultiStepCSRFPOCClientInterface {
 
 	@Override
 	public void addToPOC(String title, ArrayList<RequestModel> requests) {
-		// TODO Auto-generated method stub
-		System.out.println("TODO!");
+		this.activePOCs.get(title).addToPOC(requests);
 	}	
 }

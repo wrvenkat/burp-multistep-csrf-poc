@@ -16,6 +16,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.text.Caret;
 import org.multistepcsrfpoc.controller.client.MultiStepCSRFPOCClientInterface;
 import org.multistepcsrfpoc.model.MultiStepCSRFPOCModel;
+import org.multistepcsrfpoc.model.request.RequestModel;
 import org.multistepcsrfpoc.model.table.SelectedRequestTextPaneModel;
 import org.multistepcsrfpoc.view.MultiStepCSRFPOCWindow;
 
@@ -90,7 +91,7 @@ public class MultiStepCSRFPOCController implements ActionListener, ListSelection
 		if (msg != null)
 			view.updateMsgs(msg);
 	}
-	
+		
 	/*
 	 * Here comes the event listener method
 	 * */	
