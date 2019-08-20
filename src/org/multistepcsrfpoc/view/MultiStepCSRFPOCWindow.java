@@ -2,6 +2,8 @@ package org.multistepcsrfpoc.view;
 
 import java.util.HashMap;
 import java.awt.Dimension;
+import java.awt.Rectangle;
+import java.awt.event.MouseListener;
 import java.awt.event.WindowListener;
 
 import javax.swing.JFrame;
@@ -18,6 +20,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableModel;
 import javax.swing.text.BadLocationException;
+import javax.swing.text.Caret;
 import javax.swing.text.DefaultCaret;
 import javax.swing.text.StyledDocument;
 import javax.swing.JCheckBox;
@@ -25,6 +28,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JSeparator;
 
 import org.multistepcsrfpoc.controller.MultiStepCSRFPOCController;
+import org.multistepcsrfpoc.model.table.SelectedRequestTextPaneModel;
 
 public class MultiStepCSRFPOCWindow {
 	//public Button names
@@ -91,6 +95,7 @@ public class MultiStepCSRFPOCWindow {
 		frame.setBounds(100, 100, 825, 675);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.setPreferredSize(new Dimension(825,675));
+		frame.setMaximizedBounds(new Rectangle(new Dimension(825,675)));
 		mainScrollPane = new JScrollPane(getMainPanel());
 		frame.getContentPane().add(mainScrollPane);
 		this.getRequestsTable().getSelectionModel().setValueIsAdjusting(true);
@@ -164,8 +169,7 @@ public class MultiStepCSRFPOCWindow {
 			selectedRequestTextPane.setText("HTML");
 			selectedRequestTextPane.setBounds(7, 159, 676, 188);
 		}
-		DefaultCaret caret = (DefaultCaret) selectedRequestTextPane.getCaret();
-		caret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
+		
 		return selectedRequestTextPane;
 	}
 	private JButton getRegenerateButton() {
@@ -348,6 +352,10 @@ public class MultiStepCSRFPOCWindow {
 			this.selectedRequestTextPane.getDocument().addDocumentListener(listener);
 	}
 	
+	public void registerMouseEventListener(MouseListener listener) {
+		this.selectedRequestTextPane.addMouseListener(listener);
+	}
+	
 	//DONE: Implement the necessary methods that update the UI which can be called form the controller
 	public int getSelectedRow() {
 		return requestsTable.getSelectedRow();
@@ -375,9 +383,11 @@ public class MultiStepCSRFPOCWindow {
 	}
 	
 	//sets the SelectedRequestTextPane
-	public void setSelectedRequestText(String text) {
-		if(text == null) return;
-		selectedRequestTextPane.setText(text);
+	public void setSelectedRequestText(SelectedRequestTextPaneModel paneStatus) {
+		if(paneStatus == null) return;		
+		selectedRequestTextPane.setText(new String(paneStatus.getTextByte()));
+		if (paneStatus.getCaret() != null)
+			selectedRequestTextPane.setCaret(paneStatus.getCaret());
 	}
 	
 	//highlights the row at index row
@@ -408,6 +418,19 @@ public class MultiStepCSRFPOCWindow {
 			txtpnMsgs.setBounds(7, 610, 675, 54);
 		}
 		return txtpnMsgs;
+	}
+	
+	public Caret getSelectedRequestPaneCaret() {
+		return selectedRequestTextPane.getCaret();
+	}
+	
+	public void adjustSelectedRequestTextScrollPaneScroll(boolean allowScroll) {
+		DefaultCaret caret = (DefaultCaret) selectedRequestTextPane.getCaret();
+		
+		if (allowScroll)
+			caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+		else if (!allowScroll)
+			caret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
 	}
 	
 	public void updateMsgs(String msg) {

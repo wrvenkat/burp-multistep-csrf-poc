@@ -6,8 +6,8 @@ import java.util.Set;
 
 import org.multistepcsrfpoc.controller.MultiStepCSRFPOCController;
 import org.multistepcsrfpoc.main.MultiStepCSRFPOC;
-import org.multistepcsrfpoc.model.CSRFPOCConfigModel;
-import org.multistepcsrfpoc.model.RequestModel;
+import org.multistepcsrfpoc.model.config.CSRFPOCConfigModel;
+import org.multistepcsrfpoc.model.request.RequestModel;
 /*
  * Clients implement this interface so that the listed events are called.
  * */

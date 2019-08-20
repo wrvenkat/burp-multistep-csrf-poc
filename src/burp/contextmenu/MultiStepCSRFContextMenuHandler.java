@@ -19,8 +19,7 @@ import burp.IExtensionHelpers;
 import burp.IHttpRequestResponse;
 
 import org.multistepcsrfpoc.controller.client.MultiStepCSRFPOCClient;
-import org.multistepcsrfpoc.model.RequestModel;
-import org.multistepcsrfpoc.view.MultiStepCSRFPOCWindow;
+import org.multistepcsrfpoc.model.request.RequestModel;
 
 public class MultiStepCSRFContextMenuHandler implements IContextMenuFactory, ActionListener, MouseListener{
 	

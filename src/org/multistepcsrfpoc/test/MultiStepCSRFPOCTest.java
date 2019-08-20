@@ -5,7 +5,7 @@ import java.net.URL;
 import java.util.ArrayList;
 
 import org.multistepcsrfpoc.main.MultiStepCSRFPOC;
-import org.multistepcsrfpoc.model.RequestModel;
+import org.multistepcsrfpoc.model.request.RequestModel;
 
 public class MultiStepCSRFPOCTest {
 	private static final String TEST_URL = "https://demo.testfire.net/test/";

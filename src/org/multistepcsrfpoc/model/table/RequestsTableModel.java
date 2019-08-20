@@ -1,31 +1,47 @@
-package org.multistepcsrfpoc.model;
+package org.multistepcsrfpoc.model.table;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.text.Caret;
+import javax.swing.text.DefaultCaret;
 
-public class RequestsTableModel extends AbstractTableModel {	
+import org.multistepcsrfpoc.model.request.RequestModel;
+
+public class RequestsTableModel extends AbstractTableModel {
 	private static final long serialVersionUID = 1L;
 	
+	private class RequestMapHolder {
+		int requestNo;
+		Caret caretForRequest;
+		
+		public RequestMapHolder(int reqNo, Caret caret) {
+			this.requestNo = reqNo;
+			
+			if (caret == null)
+				caret = new DefaultCaret();
+			this.caretForRequest = caret;
+		}
+	}			
 	private static final int COLUMN_COUNT = 3;
 	private static final String[] COLUMN_NAMES = {"No.", "Method", "Request URL"};
 	private ArrayList<RequestModel> requests;
-	private HashMap<Integer, Integer> rowToRequestNoMap;	
+	private HashMap<Integer, RequestMapHolder> rowToRequestMap;
 	
 	public RequestsTableModel(ArrayList<RequestModel> requestList) {
 		if(requestList != null && !requestList.isEmpty()) {
 			this.requests = requestList;
 			//initialize the row no to request no map 
 			for(int index=1;index <= this.requests.size(); index++) {
-				if(this.rowToRequestNoMap == null)
-					this.rowToRequestNoMap = new HashMap<Integer, Integer>();				
-				this.rowToRequestNoMap.put(index-1, index);
-			}			
+				if(this.rowToRequestMap == null)
+					this.rowToRequestMap = new HashMap<Integer, RequestMapHolder>();
+				this.rowToRequestMap.put(index-1, new RequestMapHolder(index, null));
+			}
 		}
 		//otherwise empty rows
 		else {
 			this.requests = new ArrayList<RequestModel>();
-			this.rowToRequestNoMap = new HashMap<Integer, Integer>();
+			this.rowToRequestMap = new HashMap<Integer, RequestMapHolder>();
 		}
 	}
 	
@@ -33,10 +49,11 @@ public class RequestsTableModel extends AbstractTableModel {
 	private int getMaxRequestNo() {
 		int currMax = 0;
 		
-		for(int value: this.rowToRequestNoMap.values()) {			
+		for(RequestMapHolder requestMap: this.rowToRequestMap.values()) {
+			int value = requestMap.requestNo;
 			if (value >= currMax)
-				currMax = value;			
-		}		
+				currMax = value;
+		}
 		return currMax+1;
 	}
 	
@@ -45,7 +62,7 @@ public class RequestsTableModel extends AbstractTableModel {
 	private int updateRowNoRequestMap(int row) {
 		for(; row < requests.size(); row++) {			
 			if(row + 1 < requests.size()) {
-				rowToRequestNoMap.put(row, rowToRequestNoMap.get(row+1));
+				rowToRequestMap.put(row, rowToRequestMap.get(row+1));
 			}
 		}
 		return row-1;
@@ -64,7 +81,7 @@ public class RequestsTableModel extends AbstractTableModel {
 		
 		//update the row no to request no mapping and remove
 		//the row returned by the row index returned		
-		rowToRequestNoMap.remove(updateRowNoRequestMap(row));
+		rowToRequestMap.remove(updateRowNoRequestMap(row));
 		requests.remove(row);
 		//fire off even that triggers the view to update
 		fireTableRowsDeleted(row, row);
@@ -78,7 +95,7 @@ public class RequestsTableModel extends AbstractTableModel {
 		int maxRequestNo = this.getMaxRequestNo();		
 		int lastRow = requests.size()-1;
 		//update the row No to Request No map
-		rowToRequestNoMap.put(lastRow, maxRequestNo);
+		rowToRequestMap.put(lastRow, new RequestMapHolder(maxRequestNo, null));
 		//fire off even that triggers the view to update
 		fireTableRowsInserted(lastRow, lastRow);
 	}
@@ -93,9 +110,9 @@ public class RequestsTableModel extends AbstractTableModel {
 		requests.add(row-1, request);
 		
 		//update the index map
-		int currentRequestNo = rowToRequestNoMap.get(row);		
-		rowToRequestNoMap.put(row, rowToRequestNoMap.get(row-1));
-		rowToRequestNoMap.put(row-1, currentRequestNo);
+		RequestMapHolder currentRequestMap = rowToRequestMap.get(row);
+		rowToRequestMap.put(row, rowToRequestMap.get(row-1));
+		rowToRequestMap.put(row-1, currentRequestMap);
 		
 		fireTableRowsUpdated(row-1,requests.size()-1);
 		
@@ -112,9 +129,9 @@ public class RequestsTableModel extends AbstractTableModel {
 		requests.add(row+1, request);
 		
 		//update the index map
-		int currentRequestNo = rowToRequestNoMap.get(row);		
-		rowToRequestNoMap.put(row, rowToRequestNoMap.get(row+1));
-		rowToRequestNoMap.put(row+1, currentRequestNo);
+		RequestMapHolder currentRequestMap = rowToRequestMap.get(row);		
+		rowToRequestMap.put(row, rowToRequestMap.get(row+1));
+		rowToRequestMap.put(row+1, currentRequestMap);
 		
 		fireTableRowsUpdated(row,requests.size()-1);
 		
@@ -122,16 +139,17 @@ public class RequestsTableModel extends AbstractTableModel {
 	}
 	
 	//returns the request associated with the request
-	public byte[] getSelectedRequest(int row) {	
+	public SelectedRequestTextPaneModel getSelectedRequest(int row) {
 		if (row < 0 || row >= requests.size()) return null;
-		return requests.get(row).getRequest();
+		byte[] requestByte = requests.get(row).getRequest();		
+		return new SelectedRequestTextPaneModel(requestByte, this.rowToRequestMap.get(row).caretForRequest);
 	}
 	
 	//sets the request of the selected row	
-	public void setSelectedRequest(int row, byte[] request) {
-		if (row < 0 || row >= requests.size()) return;
-				
-		requests.get(row).setRequest(request);
+	public void setSelectedRequest(int row, SelectedRequestTextPaneModel requestPaneStatus) {//byte[] request) {
+		if (row < 0 || row >= requests.size()) return;				
+		requests.get(row).setRequest(requestPaneStatus.getTextByte());
+		rowToRequestMap.get(row).caretForRequest = requestPaneStatus.getCaret();
 	}
 	
 	//returns the column names	
@@ -165,7 +183,7 @@ public class RequestsTableModel extends AbstractTableModel {
 		switch (column) {
 			//request index column 
 			case 0:
-				return rowToRequestNoMap.get(rowIndex);
+				return rowToRequestMap.get(rowIndex).requestNo;
 			//request method
 			case 1:
 				return request.getHttpMethod();

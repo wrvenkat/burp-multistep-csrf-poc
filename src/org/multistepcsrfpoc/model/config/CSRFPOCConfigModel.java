@@ -1,4 +1,4 @@
-package org.multistepcsrfpoc.model;
+package org.multistepcsrfpoc.model.config;
 
 public class CSRFPOCConfigModel {
 	private boolean useIframe;

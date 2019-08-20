@@ -3,6 +3,8 @@ package org.multistepcsrfpoc.controller;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
@@ -11,9 +13,10 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-
+import javax.swing.text.Caret;
 import org.multistepcsrfpoc.controller.client.MultiStepCSRFPOCClientInterface;
 import org.multistepcsrfpoc.model.MultiStepCSRFPOCModel;
+import org.multistepcsrfpoc.model.table.SelectedRequestTextPaneModel;
 import org.multistepcsrfpoc.view.MultiStepCSRFPOCWindow;
 
 /*
@@ -22,13 +25,13 @@ import org.multistepcsrfpoc.view.MultiStepCSRFPOCWindow;
  * 
  *  TODO: The above can be implemented when required.
  * */
-public class MultiStepCSRFPOCController implements ActionListener, ListSelectionListener, WindowListener, DocumentListener {			
+public class MultiStepCSRFPOCController implements ActionListener, ListSelectionListener, WindowListener, DocumentListener, MouseListener {			
 	private MultiStepCSRFPOCClientInterface client;
 	private MultiStepCSRFPOCModel model;
 	private MultiStepCSRFPOCWindow view;
 	private int selectedRow;	
 	
-	private MultiStepCSRFPOCController() {		
+	private MultiStepCSRFPOCController() {
 	}
 	
 	/*Accepts a client and returns an instance*/
@@ -44,17 +47,11 @@ public class MultiStepCSRFPOCController implements ActionListener, ListSelection
 		view.registerHandler(controller);
 		view.registerTableModel(model.getTableModel());
 		view.registerRowSelectionListener(controller);
-		view.registerWindowListener(controller);		
+		view.registerWindowListener(controller);
+		view.registerMouseEventListener(controller);
 	
 		//initializes the UI based on default model values
-		controller.initView();
-		
-		//also we select the first request if there is any such
-		if(view.getRequestsTable().getModel().getValueAt(0, 2) != null) {
-			view.highlightRow(0);
-			model.setSelectedRequestText(new String(model.getSelectedRequest(0)));
-			view.setSelectedRequestText(model.getSelectedRequestText());
-		}
+		controller.initView();		
 		
 		//register the document listener last
 		view.registerDocumentListener(controller);
@@ -78,8 +75,13 @@ public class MultiStepCSRFPOCController implements ActionListener, ListSelection
 		if(model.isAutoSubmit())
 			view.setAutoSubmit(true);
 		
-		//set the text for the selected request text pane
-		view.setSelectedRequestText(model.getSelectedRequestText());
+		//also we select the first request if there is any such
+		if(view.getRequestsTable().getModel().getValueAt(0, 2) != null) {
+			view.highlightRow(0);
+			model.setSelectedRequestText(new String(model.getSelectedRequest(0).getTextByte()));
+			view.setSelectedRequestText(model.getSelectedRequest(0));
+		}
+		
 		//set the text for the CSRF poc text pane
 		view.setCSRFPOCText(model.getCsrfPOCText());
 	}	
@@ -124,7 +126,7 @@ public class MultiStepCSRFPOCController implements ActionListener, ListSelection
 				//update the model for the selected request
 				model.setSelectedRequestText("");
 				//update the UI
-				view.setSelectedRequestText(model.getSelectedRequestText());
+				view.setSelectedRequestText(new SelectedRequestTextPaneModel(model.getSelectedRequestText(), null));
 			}
 		}
 		else if(actionCommand == MultiStepCSRFPOCWindow.NEW_TAB_RADIOBUTTON) {
@@ -171,7 +173,7 @@ public class MultiStepCSRFPOCController implements ActionListener, ListSelection
 		}
 	}
 	
-	@Override
+	//listener to listen for when the table selection changes
 	public void valueChanged(ListSelectionEvent event) {
 		selectedRow = view.getRequestsTable().getSelectedRow();
 		if(selectedRow == -1) return;		
@@ -182,10 +184,12 @@ public class MultiStepCSRFPOCController implements ActionListener, ListSelection
 		/*String currentRequestText = view.getSelectedRequestText();
 		//update the requests model
 		model.setSelectedRequest(selectedRow, currentRequestText.getBytes());*/
+		
+		view.adjustSelectedRequestTextScrollPaneScroll(false);
 		//update the UI model
-		model.setSelectedRequestText(new String(model.getSelectedRequest(selectedRow)));
+		model.setSelectedRequestText(new String(model.getSelectedRequest(selectedRow).getTextByte()));
 		//update the view
-		view.setSelectedRequestText(model.getSelectedRequestText());
+		view.setSelectedRequestText(model.getSelectedRequest(selectedRow));
 	}
 
 	public void windowClosing(WindowEvent e) {
@@ -194,12 +198,23 @@ public class MultiStepCSRFPOCController implements ActionListener, ListSelection
 		this.client.csrfPOCWindowClosed(((Frame)(e.getWindow())).getTitle());
 	}
 	
-	public void removeUpdate(DocumentEvent e) {		
-		model.setSelectedRequest(selectedRow, view.getSelectedRequestText().getBytes());		
+	public void removeUpdate(DocumentEvent e) {
+		byte[] textBytes = view.getSelectedRequestText().getBytes();
+		Caret caret = view.getSelectedRequestPaneCaret();
+		model.setSelectedRequest(selectedRow, new SelectedRequestTextPaneModel(textBytes, caret));
 	}
 	
-	public void insertUpdate(DocumentEvent e) {		
-		model.setSelectedRequest(selectedRow, view.getSelectedRequestText().getBytes());
+	public void insertUpdate(DocumentEvent e) {
+		byte[] textBytes = view.getSelectedRequestText().getBytes();
+		Caret caret = view.getSelectedRequestPaneCaret();
+		model.setSelectedRequest(selectedRow, new SelectedRequestTextPaneModel(textBytes, caret));
+	}
+	
+	public void mousePressed(MouseEvent e) {
+		view.adjustSelectedRequestTextScrollPaneScroll(true);
+		/*byte[] textBytes = view.getSelectedRequestText().getBytes();
+		Caret caret = view.getSelectedRequestPaneCaret();
+		model.setSelectedRequest(selectedRow, new SelectedRequestTextPaneModel(textBytes, caret));*/
 	}
 	
 	/*Autogenerated stubs*/
@@ -241,6 +256,30 @@ public class MultiStepCSRFPOCController implements ActionListener, ListSelection
 
 	@Override
 	public void changedUpdate(DocumentEvent e) {
+		
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}		
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
 		
 	}
 }

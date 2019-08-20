@@ -5,10 +5,10 @@ import java.util.ArrayList;
 
 import org.multistepcsrfpoc.controller.MultiStepCSRFPOCController;
 import org.multistepcsrfpoc.controller.client.MultiStepCSRFPOCClientInterface;
-import org.multistepcsrfpoc.model.CSRFPOCConfigModel;
 import org.multistepcsrfpoc.model.MultiStepCSRFPOCModel;
-import org.multistepcsrfpoc.model.RequestModel;
-import org.multistepcsrfpoc.model.RequestsTableModel;
+import org.multistepcsrfpoc.model.config.CSRFPOCConfigModel;
+import org.multistepcsrfpoc.model.request.RequestModel;
+import org.multistepcsrfpoc.model.table.RequestsTableModel;
 import org.multistepcsrfpoc.view.MultiStepCSRFPOCWindow;
 
 public class MultiStepCSRFPOC {

@@ -1,4 +1,4 @@
-package org.multistepcsrfpoc.model;
+package org.multistepcsrfpoc.model.request;
 
 import java.net.URL;
 

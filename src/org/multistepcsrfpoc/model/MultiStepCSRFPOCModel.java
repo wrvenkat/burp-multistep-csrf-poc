@@ -2,6 +2,11 @@ package org.multistepcsrfpoc.model;
 
 import java.util.ArrayList;
 
+import org.multistepcsrfpoc.model.config.CSRFPOCConfigModel;
+import org.multistepcsrfpoc.model.request.RequestModel;
+import org.multistepcsrfpoc.model.table.RequestsTableModel;
+import org.multistepcsrfpoc.model.table.SelectedRequestTextPaneModel;
+
 public class MultiStepCSRFPOCModel {
 	private RequestsTableModel tableModel;
 	private CSRFPOCConfigModel csrfPOCConfig;
@@ -36,12 +41,12 @@ public class MultiStepCSRFPOCModel {
 	}
 	
 	/*Gets the request for the selected row*/
-	public byte[] getSelectedRequest(int row) {
+	public SelectedRequestTextPaneModel getSelectedRequest(int row) {
 		return tableModel.getSelectedRequest(row);
 	}
 	
-	public void setSelectedRequest(int row, byte[] request) {
-		tableModel.setSelectedRequest(row, request);
+	public void setSelectedRequest(int row, SelectedRequestTextPaneModel paneStatus) {
+		tableModel.setSelectedRequest(row, paneStatus);
 	}
 
 	public CSRFPOCConfigModel getCsrfPOCConfig() {
