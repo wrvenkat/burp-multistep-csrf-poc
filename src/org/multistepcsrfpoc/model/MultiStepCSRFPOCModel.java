@@ -8,43 +8,43 @@ import org.multistepcsrfpoc.model.table.RequestsTableModel;
 import org.multistepcsrfpoc.model.table.SelectedRequestTextPaneModel;
 
 public class MultiStepCSRFPOCModel {
-	private RequestsTableModel tableModel;
+	private final RequestsTableModel tableModel;
 	private CSRFPOCConfigModel csrfPOCConfig;
 	private String selectedRequestText;
 	private String csrfPOCText;
-	
+
 	public MultiStepCSRFPOCModel(RequestsTableModel tableModel, CSRFPOCConfigModel csrfPOCConfig) {
 		this.tableModel = tableModel;
 		this.csrfPOCConfig = csrfPOCConfig;
 		this.selectedRequestText = "<Selected Request>";
 		this.csrfPOCText = "<CSRF POC>";
 	}
-	
+
 	/*removes rowIndex from the tableModel*/
 	public void removeRow(int rowIndex) {
 		tableModel.removeRow(rowIndex);
 	}
-	
+
 	/*Adds a row*/
 	public void addRow(RequestModel request) {
 		tableModel.addRow(request);
 	}
-	
+
 	/*Moves the selected row at rowIndex up one position*/
 	public Boolean moveRowUp(int rowIndex) {
 		return tableModel.moveRowUp(rowIndex);
 	}
-	
+
 	/*Moves the selected row at rowIndex down one position*/
 	public Boolean moveRowDown(int rowIndex) {
 		return tableModel.moveRowDown(rowIndex);
 	}
-	
+
 	/*Gets the request for the selected row*/
 	public SelectedRequestTextPaneModel getSelectedRequest(int row) {
 		return tableModel.getSelectedRequest(row);
 	}
-	
+
 	public void setSelectedRequest(int row, SelectedRequestTextPaneModel paneStatus) {
 		tableModel.setSelectedRequest(row, paneStatus);
 	}
@@ -56,7 +56,7 @@ public class MultiStepCSRFPOCModel {
 	public void setCsrfPOCConfig(CSRFPOCConfigModel csrfPOCConfig) {
 		this.csrfPOCConfig = csrfPOCConfig;
 	}
-	
+
 	public boolean isUseIframe() {
 		return csrfPOCConfig.isUseIframe();
 	}
@@ -102,7 +102,7 @@ public class MultiStepCSRFPOCModel {
 	}
 
 	public void setAutoSubmit(boolean autosSubmit) {
-		csrfPOCConfig.setAutoSubmit(autosSubmit);	
+		csrfPOCConfig.setAutoSubmit(autosSubmit);
 	}
 
 	public void setSelectedRequestText(String selectedRequestText) {
@@ -119,7 +119,7 @@ public class MultiStepCSRFPOCModel {
 
 	public String getCsrfPOCText() {
 		return csrfPOCText;
-	}	
+	}
 
 	public ArrayList<RequestModel> getRequests() {
 		return tableModel.getRequests();

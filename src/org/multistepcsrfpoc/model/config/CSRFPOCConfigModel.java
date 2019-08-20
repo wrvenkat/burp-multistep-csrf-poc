@@ -7,7 +7,7 @@ public class CSRFPOCConfigModel {
 	private boolean useForm;
 	private boolean useJQuery;
 	private boolean autoSubmit;
-	
+
 	public CSRFPOCConfigModel() {
 		//default config
 		this.useIframe = true;
@@ -66,5 +66,5 @@ public class CSRFPOCConfigModel {
 
 	public void setAutoSubmit(boolean autosSubmit) {
 		this.autoSubmit = autosSubmit;
-	}		
+	}
 }

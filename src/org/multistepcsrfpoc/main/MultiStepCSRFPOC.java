@@ -12,22 +12,23 @@ import org.multistepcsrfpoc.model.table.RequestsTableModel;
 import org.multistepcsrfpoc.view.MultiStepCSRFPOCWindow;
 
 public class MultiStepCSRFPOC {
-	private MultiStepCSRFPOCWindow view;
-	private MultiStepCSRFPOCModel model;
-	
+	private final MultiStepCSRFPOCWindow view;
+	private final MultiStepCSRFPOCModel model;
+
 	public MultiStepCSRFPOC(String title, ArrayList<RequestModel> requestList, MultiStepCSRFPOCClientInterface client) {
-		this.view = new MultiStepCSRFPOCWindow(title);		
+		this.view = new MultiStepCSRFPOCWindow(title);
 		this.model = new MultiStepCSRFPOCModel(new RequestsTableModel(requestList), new CSRFPOCConfigModel());
 		//connect the controller with the model and the client
 		MultiStepCSRFPOCController controller = MultiStepCSRFPOCController.connect(model, view, client);
 		client.setController(controller);
 		MultiStepCSRFPOC.showUI(this.view);
 	}
-	
+
 	private static void showUI(final MultiStepCSRFPOCWindow view) {
 		EventQueue.invokeLater(new Runnable() {
+			@Override
 			public void run() {
-				try {					
+				try {
 					view.setVisible();
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -35,7 +36,7 @@ public class MultiStepCSRFPOC {
 			}
 		});
 	}
-	
+
 	public void addToPOC(ArrayList<RequestModel> requests) {
 		for (RequestModel request: requests)
 			this.model.addRow(request);

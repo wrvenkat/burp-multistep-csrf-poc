@@ -1,19 +1,22 @@
 package org.multistepcsrfpoc.view;
 
-import java.util.HashMap;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowListener;
+import java.util.HashMap;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
+import javax.swing.JTable;
 import javax.swing.JTextPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.DocumentListener;
@@ -23,9 +26,6 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Caret;
 import javax.swing.text.DefaultCaret;
 import javax.swing.text.StyledDocument;
-import javax.swing.JCheckBox;
-import javax.swing.JRadioButton;
-import javax.swing.JSeparator;
 
 import org.multistepcsrfpoc.controller.MultiStepCSRFPOCController;
 import org.multistepcsrfpoc.model.table.SelectedRequestTextPaneModel;
@@ -43,7 +43,7 @@ public class MultiStepCSRFPOCWindow {
 	public static final String XHR_RADIOBUTTON = "XHR";
 	public static final String JQUERY_RADIOBUTTON = "jQuery";
 	public static final String AUTO_SUBMIT_CHECKBOX = "auto submit";
-	
+
 	//carries the buttons for which we need to register
 	//listeners for
 	private HashMap<String, AbstractButton> buttons;
@@ -72,9 +72,9 @@ public class MultiStepCSRFPOCWindow {
 	private JRadioButton jqueryRadioButton;
 	private JScrollPane csrfPOCScrollPane;
 	private JSeparator separator3;
-	private JCheckBox autoSubmitCheckBox;	
+	private JCheckBox autoSubmitCheckBox;
 	private ButtonGroup pocOpenInGroup;
-	private ButtonGroup techniqueButtonGroup;	
+	private ButtonGroup techniqueButtonGroup;
 	private JScrollPane msgsScrollPane;
 	private JTextPane txtpnMsgs;
 
@@ -100,33 +100,33 @@ public class MultiStepCSRFPOCWindow {
 		frame.getContentPane().add(mainScrollPane);
 		this.getRequestsTable().getSelectionModel().setValueIsAdjusting(true);
 	}
-	
+
 	private JPanel getMainPanel() {
 		if (mainPanel == null) {
 			mainPanel = new JPanel();
 			mainPanel.setPreferredSize(new Dimension(800, 650));
 			mainPanel.setLayout(null);
-			
-			//Requests Table								
+
+			//Requests Table
 			tableScrollPane = new JScrollPane(getRequestsTable());
 			tableScrollPane.setBounds(7, 7, 676, 118);
 			mainPanel.add(tableScrollPane);
-			
-			//Buttons						
+
+			//Buttons
 			mainPanel.add(getRemoveButton());
 			mainPanel.add(getUpButton());
 			mainPanel.add(getDownButton());
-			mainPanel.add(getSelectedRequestLabel());			
+			mainPanel.add(getSelectedRequestLabel());
 			mainPanel.add(getCsrfPOCLabel());
 			mainPanel.add(getPocOpensInLabel());
 			selectedRequestScrollPane = new JScrollPane(getSelectedRequestTextPane());
 			selectedRequestScrollPane.setBounds(7, 159, 676, 188);
 			mainPanel.add(selectedRequestScrollPane);
-			
+
 			//button groups
 			pocOpenInGroup = new ButtonGroup();
 			pocOpenInGroup.add(getNewTabRadioButton());
-			pocOpenInGroup.add(getIframeRadioButton());			
+			pocOpenInGroup.add(getIframeRadioButton());
 			mainPanel.add(getNewTabRadioButton());
 			mainPanel.add(getIframeRadioButton());
 			mainPanel.add(getSeparator2());
@@ -141,14 +141,14 @@ public class MultiStepCSRFPOCWindow {
 			mainPanel.add(getSeparator3());
 			mainPanel.add(getAutoSubmitCheckBox());
 			mainPanel.add(getRegenerateButton());
-			
+
 			//CSRF POC text pane
 			//mainPanel.add(getCsrfPOCTextPane());
 			mainPanel.add(getCopyHTMLButton());
 			csrfPOCScrollPane = new JScrollPane(getCsrfPOCTextPane());
 			csrfPOCScrollPane.setBounds(7, 371, 800, 235);
 			mainPanel.add(csrfPOCScrollPane);
-			
+
 			//MSGS text pane
 			msgsScrollPane = new JScrollPane(getTxtpnMsgs());
 			msgsScrollPane.setBounds(7, 610, 675, 55);
@@ -169,7 +169,7 @@ public class MultiStepCSRFPOCWindow {
 			selectedRequestTextPane.setText("HTML");
 			selectedRequestTextPane.setBounds(7, 159, 676, 188);
 		}
-		
+
 		return selectedRequestTextPane;
 	}
 	private JButton getRegenerateButton() {
@@ -208,7 +208,7 @@ public class MultiStepCSRFPOCWindow {
 			copyHTMLButton = new JButton(COPY_HTML_BUTTON);
 			copyHTMLButton.setBounds(690, 630, 117, 25);
 			buttons.put(COPY_HTML_BUTTON, copyHTMLButton);
-		}		
+		}
 		return copyHTMLButton;
 	}
 	private JButton getUpButton() {
@@ -285,10 +285,10 @@ public class MultiStepCSRFPOCWindow {
 			jqueryRadioButton = new JRadioButton(JQUERY_RADIOBUTTON);
 			jqueryRadioButton.setBounds(700, 277, 149, 23);
 			buttons.put(JQUERY_RADIOBUTTON, jqueryRadioButton);
-			
+
 		}
 		return jqueryRadioButton;
-	}	
+	}
 	private JSeparator getSeparator3() {
 		if (separator3 == null) {
 			separator3 = new JSeparator();
@@ -308,15 +308,15 @@ public class MultiStepCSRFPOCWindow {
 		if(requestsTable == null) {
 			requestsTable = new JTable();
 			requestsTable.setBounds(7, 7, 676, 118);
-			
+
 			//set the selection mode to Single Interval selection which only allows
 			//contiguous rows selection
-			requestsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);			
+			requestsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		}
-		
+
 		return requestsTable;
 	}
-	
+
 	/**
 	 * Method is used to register listeners for the UI
 	 * */
@@ -325,91 +325,91 @@ public class MultiStepCSRFPOCWindow {
 			button.addActionListener(controller);
 		}
 	}
-	
+
 	//registers the TableModel
 	public void registerTableModel(TableModel tableModel) {
 		requestsTable.setModel(tableModel);
 		//once the model is set, we set the constraints
 		requestsTable.getColumnModel().getColumn(0).setMaxWidth(35);
-		requestsTable.getColumnModel().getColumn(1).setMaxWidth(100);		
+		requestsTable.getColumnModel().getColumn(1).setMaxWidth(100);
 	}
-	
+
 	//registers the ListSelectionListener
 	public void registerRowSelectionListener(ListSelectionListener listener) {
 		if(listener != null)
 			this.getRequestsTable().getSelectionModel().addListSelectionListener(listener);
 	}
-	
+
 	//registers windowListener
 	public void registerWindowListener(WindowListener listener) {
 		if (listener != null)
 			this.frame.addWindowListener(listener);
 	}
-	
+
 	public void registerDocumentListener(DocumentListener listener) {
 		if (listener != null)
 			this.selectedRequestTextPane.getDocument().addDocumentListener(listener);
 	}
-	
+
 	public void registerMouseEventListener(MouseListener listener) {
 		this.selectedRequestTextPane.addMouseListener(listener);
 	}
-	
+
 	//DONE: Implement the necessary methods that update the UI which can be called form the controller
 	public int getSelectedRow() {
 		return requestsTable.getSelectedRow();
 	}
-	
+
 	public void setVisible() {
-		this.frame.setVisible(true);		
-	}		
-	
+		this.frame.setVisible(true);
+	}
+
 	public void setIframe(Boolean value) {
 		this.iframeRadioButton.setSelected(value);
 	}
-		
+
 	public void setXhr(Boolean value) {
 		this.xhrRadioButton.setSelected(value);
 	}
-	
+
 	public void setJQuery(Boolean value) {
 		this.jqueryRadioButton.setSelected(value);
 	}
-	
+
 	//sets iframe radio button to true
 	public void setAutoSubmit(Boolean value) {
 		this.autoSubmitCheckBox.setSelected(value);
 	}
-	
+
 	//sets the SelectedRequestTextPane
 	public void setSelectedRequestText(SelectedRequestTextPaneModel paneStatus) {
-		if(paneStatus == null) return;		
+		if(paneStatus == null) return;
 		selectedRequestTextPane.setText(new String(paneStatus.getTextByte()));
 		if (paneStatus.getCaret() != null)
 			selectedRequestTextPane.setCaret(paneStatus.getCaret());
 	}
-	
+
 	//highlights the row at index row
 	public void highlightRow(int rowIndex) {
 		requestsTable.setRowSelectionInterval(rowIndex, rowIndex);
 	}
-	
+
 	//gets the SelectedRequestTextPane
 	public String getSelectedRequestText() {
 		return selectedRequestTextPane.getText();
 	}
-	
+
 	//sets the CSRFPOCTextPane
 	public void setCSRFPOCText(String text) {
 		if(text == null) return;
 		csrfPOCTextPane.setText(text);
 	}
-	
+
 	//gets the SelectedRequestTextPane
 	public String getCSRFPOCText() {
 		return csrfPOCTextPane.getText();
 	}
-	
+
 	private JTextPane getTxtpnMsgs() {
 		if (txtpnMsgs == null) {
 			txtpnMsgs = new JTextPane();
@@ -418,29 +418,29 @@ public class MultiStepCSRFPOCWindow {
 		}
 		return txtpnMsgs;
 	}
-	
+
 	public Caret getSelectedRequestPaneCaret() {
 		return selectedRequestTextPane.getCaret();
 	}
-	
+
 	public void adjustSelectedRequestTextScrollPaneScroll(boolean allowScroll) {
 		DefaultCaret caret = (DefaultCaret) selectedRequestTextPane.getCaret();
-		
+
 		if (allowScroll)
 			caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 		else if (!allowScroll)
 			caret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
 	}
-	
+
 	public void updateMsgs(String msg) {
 		if (msg == null) return;
-		
+
 		msg += "\n";
 		StyledDocument document = (StyledDocument) txtpnMsgs.getDocument();
 	    try {
 			document.insertString(document.getLength(), msg, null);
 		} catch (BadLocationException e) {
-			e.printStackTrace();			
+			e.printStackTrace();
 		}
-	}	
+	}
 }

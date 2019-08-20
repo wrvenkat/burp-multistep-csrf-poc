@@ -3,16 +3,16 @@ package org.multistepcsrfpoc.model.request;
 import java.net.URL;
 
 public class RequestModel {
-	private String httpMethod;	
+	private String httpMethod;
 	private URL url;
-	private byte[] request;	
-	
+	private byte[] request;
+
 	public RequestModel(String httpMethod, URL url, byte[] request) {
 		this.httpMethod = httpMethod;
 		this.url = url;
 		this.request = request;
 	}
-	
+
 	public String getHttpMethod() {
 		return httpMethod;
 	}
@@ -21,7 +21,7 @@ public class RequestModel {
 	}
 	public byte[] getRequest() {
 		return request;
-	}	
+	}
 	public void setHttpMethod(String httpMethod) {
 		this.httpMethod = httpMethod;
 	}

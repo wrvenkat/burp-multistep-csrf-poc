@@ -14,28 +14,28 @@ import org.multistepcsrfpoc.model.config.CSRFPOCConfigModel;
 import org.multistepcsrfpoc.model.request.RequestModel;
 
 public class MultiStepCSRFPOCTestClient implements MultiStepCSRFPOCClientInterface {
-	private HashMap<String, MultiStepCSRFPOC> activePOCs;
+	private final HashMap<String, MultiStepCSRFPOC> activePOCs;
 	private MultiStepCSRFPOCController controller;
-	
+
 	public MultiStepCSRFPOCTestClient() {
 		this.activePOCs = new HashMap<String, MultiStepCSRFPOC>();
 	}
-	
+
 	@Override
-	public String regenerateClicked(CSRFPOCConfigModel csrfPOCConfig, ArrayList<RequestModel> requests) {		
-		String configMsg =  "CSRF POC Config is "+"\n"+							
+	public String regenerateClicked(CSRFPOCConfigModel csrfPOCConfig, ArrayList<RequestModel> requests) {
+		String configMsg =  "CSRF POC Config is "+"\n"+
 							"Use new tab: "+csrfPOCConfig.isUseNewTab()+"\n"+
-							"Use Iframe: "+csrfPOCConfig.isUseIframe()+"\n"+							
+							"Use Iframe: "+csrfPOCConfig.isUseIframe()+"\n"+
 							"Use XHR: "+csrfPOCConfig.isUseXhr()+"\n"+
 							"Use Form: "+csrfPOCConfig.isUseForm()+"\n"+
 							"Use jQuery: "+csrfPOCConfig.isUseJQuery()+"\n"+
 							"Auto Submit: "+csrfPOCConfig.isAutoSubmit();
-		
+
 		//call the request_parser on all the requests
 
 		//call the request_builder on all the requests
-		
-		this.controller.updateMsgs(configMsg);		
+
+		this.controller.updateMsgs(configMsg);
 		return "<NEW CSRF POC>";
 	}
 
@@ -64,12 +64,13 @@ public class MultiStepCSRFPOCTestClient implements MultiStepCSRFPOCClientInterfa
 	public void createCSRFPOCWindow(ArrayList<RequestModel> requests) {
 		System.out.println("Generate new Multi-Step CSRF POC clicked!");
 	}
-	
+
 	@Override
 	public void addToPOC(String title, ArrayList<RequestModel> requests) {
 		System.out.println("addToPOC clicked!");
 	}
 
+	@Override
 	public void setController(MultiStepCSRFPOCController controller) {
 		this.controller = controller;
 	}
