@@ -16,7 +16,7 @@ public interface MultiStepCSRFPOCClientInterface {
 
 	/*Called when Regenerate button is clicked*/
 	/*Expects a String which is the new CSRF POC*/
-	public String regenerateClicked(CSRFPOCConfigModel csrfPOCConfig, ArrayList<RequestModel> requests);
+	public String generateClicked(CSRFPOCConfigModel csrfPOCConfig, ArrayList<RequestModel> requests);
 
 	/*Copy HTML clicked*/
 	public void copyHTMLClicked(String csrfPOCText);

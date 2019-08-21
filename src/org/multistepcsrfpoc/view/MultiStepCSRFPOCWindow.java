@@ -36,13 +36,14 @@ public class MultiStepCSRFPOCWindow {
 	public static final String UP_BUTTON = "Up";
 	public static final String DOWN_BUTTON = "Down";
 	public static final String REMOVE_BUTTON = "Remove";
-	public static final String REGENERATE_BUTTON = "Regenerate";
+	public static final String GENERATE_BUTTON = "Generate";
 	public static final String NEW_TAB_RADIOBUTTON = "new tab";
 	public static final String IFRAME_RADIOBUTTON = "iframe";
 	public static final String FORM_RADIOBUTTON = "form";
 	public static final String XHR_RADIOBUTTON = "XHR";
 	public static final String JQUERY_RADIOBUTTON = "jQuery";
 	public static final String AUTO_SUBMIT_CHECKBOX = "auto submit";
+	public static final String CLEAR_MSGS_BUTTON = "Clear Msgs";
 
 	//carries the buttons for which we need to register
 	//listeners for
@@ -56,7 +57,7 @@ public class MultiStepCSRFPOCWindow {
 	private JLabel selectedRequestLabel;
 	private JTextPane selectedRequestTextPane;
 	private JScrollPane selectedRequestScrollPane;
-	private JButton regenerateButton;
+	private JButton generateButton;
 	private JLabel csrfPOCLabel;
 	private JTextPane csrfPOCTextPane;
 	private JButton copyHTMLButton;
@@ -77,6 +78,7 @@ public class MultiStepCSRFPOCWindow {
 	private ButtonGroup techniqueButtonGroup;
 	private JScrollPane msgsScrollPane;
 	private JTextPane txtpnMsgs;
+	private JButton clearMsgsButton;
 
 	/**
 	 * Create the application window.
@@ -140,11 +142,7 @@ public class MultiStepCSRFPOCWindow {
 			mainPanel.add(getJqueryRadioButton());
 			mainPanel.add(getSeparator3());
 			mainPanel.add(getAutoSubmitCheckBox());
-			mainPanel.add(getRegenerateButton());
-
-			//CSRF POC text pane
-			//mainPanel.add(getCsrfPOCTextPane());
-			mainPanel.add(getCopyHTMLButton());
+			mainPanel.add(getGenerateButton());
 			csrfPOCScrollPane = new JScrollPane(getCsrfPOCTextPane());
 			csrfPOCScrollPane.setBounds(7, 371, 800, 235);
 			mainPanel.add(csrfPOCScrollPane);
@@ -153,6 +151,11 @@ public class MultiStepCSRFPOCWindow {
 			msgsScrollPane = new JScrollPane(getTxtpnMsgs());
 			msgsScrollPane.setBounds(7, 610, 675, 55);
 			mainPanel.add(msgsScrollPane);
+
+			//CSRF POC text pane
+			//mainPanel.add(getCsrfPOCTextPane());
+			mainPanel.add(getCopyHTMLButton());
+			mainPanel.add(getClearMsgsButton());
 		}
 		return mainPanel;
 	}
@@ -172,13 +175,13 @@ public class MultiStepCSRFPOCWindow {
 
 		return selectedRequestTextPane;
 	}
-	private JButton getRegenerateButton() {
-		if (regenerateButton == null) {
-			regenerateButton = new JButton(REGENERATE_BUTTON);
-			regenerateButton.setBounds(690, 336, 118, 25);
-			buttons.put(REGENERATE_BUTTON, regenerateButton);
+	private JButton getGenerateButton() {
+		if (generateButton == null) {
+			generateButton = new JButton(GENERATE_BUTTON);
+			generateButton.setBounds(690, 336, 118, 25);
+			buttons.put(GENERATE_BUTTON, generateButton);
 		}
-		return regenerateButton;
+		return generateButton;
 	}
 	private JButton getRemoveButton() {
 		if (removeButton == null) {
@@ -206,7 +209,7 @@ public class MultiStepCSRFPOCWindow {
 	private JButton getCopyHTMLButton() {
 		if (copyHTMLButton == null) {
 			copyHTMLButton = new JButton(COPY_HTML_BUTTON);
-			copyHTMLButton.setBounds(690, 630, 117, 25);
+			copyHTMLButton.setBounds(690, 610, 117, 25);
 			buttons.put(COPY_HTML_BUTTON, copyHTMLButton);
 		}
 		return copyHTMLButton;
@@ -316,6 +319,23 @@ public class MultiStepCSRFPOCWindow {
 
 		return requestsTable;
 	}
+	private JTextPane getTxtpnMsgs() {
+		if (txtpnMsgs == null) {
+			txtpnMsgs = new JTextPane();
+			txtpnMsgs.setText(null);
+			txtpnMsgs.setEditable(false);
+			txtpnMsgs.setBounds(7, 610, 675, 54);
+		}
+		return txtpnMsgs;
+	}
+	private JButton getClearMsgsButton() {
+		if (clearMsgsButton == null) {
+			clearMsgsButton = new JButton(CLEAR_MSGS_BUTTON);
+			clearMsgsButton.setBounds(690, 640, 117, 25);
+			buttons.put(CLEAR_MSGS_BUTTON, clearMsgsButton);
+		}
+		return clearMsgsButton;
+	}
 
 	/**
 	 * Method is used to register listeners for the UI
@@ -410,15 +430,6 @@ public class MultiStepCSRFPOCWindow {
 		return csrfPOCTextPane.getText();
 	}
 
-	private JTextPane getTxtpnMsgs() {
-		if (txtpnMsgs == null) {
-			txtpnMsgs = new JTextPane();
-			txtpnMsgs.setText("msgs\n");
-			txtpnMsgs.setBounds(7, 610, 675, 54);
-		}
-		return txtpnMsgs;
-	}
-
 	public Caret getSelectedRequestPaneCaret() {
 		return selectedRequestTextPane.getCaret();
 	}
@@ -430,6 +441,10 @@ public class MultiStepCSRFPOCWindow {
 			caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 		else if (!allowScroll)
 			caret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
+	}
+
+	public void clearMSgs() {
+		this.txtpnMsgs.setText(null);
 	}
 
 	public void updateMsgs(String msg) {

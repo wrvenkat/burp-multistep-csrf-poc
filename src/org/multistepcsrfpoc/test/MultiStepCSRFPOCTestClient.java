@@ -22,7 +22,7 @@ public class MultiStepCSRFPOCTestClient implements MultiStepCSRFPOCClientInterfa
 	}
 
 	@Override
-	public String regenerateClicked(CSRFPOCConfigModel csrfPOCConfig, ArrayList<RequestModel> requests) {
+	public String generateClicked(CSRFPOCConfigModel csrfPOCConfig, ArrayList<RequestModel> requests) {
 		String configMsg =  "CSRF POC Config is "+"\n"+
 							"Use new tab: "+csrfPOCConfig.isUseNewTab()+"\n"+
 							"Use Iframe: "+csrfPOCConfig.isUseIframe()+"\n"+

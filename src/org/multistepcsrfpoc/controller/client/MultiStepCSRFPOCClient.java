@@ -12,6 +12,8 @@ import org.multistepcsrfpoc.main.MultiStepCSRFPOC;
 import org.multistepcsrfpoc.model.config.CSRFPOCConfigModel;
 import org.multistepcsrfpoc.model.request.RequestModel;
 
+import requestparser.proxy.HttpRequestProxy;
+
 public class MultiStepCSRFPOCClient implements MultiStepCSRFPOCClientInterface {
 	private int activePOCCount;
 	private final HashMap<String, MultiStepCSRFPOC> activePOCs;
@@ -40,10 +42,9 @@ public class MultiStepCSRFPOCClient implements MultiStepCSRFPOCClientInterface {
 	}
 
 	@Override
-	public String regenerateClicked(CSRFPOCConfigModel csrfPOCConfig, ArrayList<RequestModel> requests) {
+	public String generateClicked(CSRFPOCConfigModel csrfPOCConfig, ArrayList<RequestModel> requests) {
 		System.out.println("Regenerate Button Clicked!");
-		System.out.println("\n"+
-							"CSRF POC Config is "+"\n"+
+		System.out.println("CSRF POC Config is "+"\n"+
 							"Use new tab: "+csrfPOCConfig.isUseNewTab()+"\n"+
 							"Use Iframe: "+csrfPOCConfig.isUseIframe()+"\n"+
 							"Use XHR: "+csrfPOCConfig.isUseXhr()+"\n"+
@@ -53,8 +54,19 @@ public class MultiStepCSRFPOCClient implements MultiStepCSRFPOCClientInterface {
 						  );
 		try {
 			//call the request_parser on all the requests
+			ArrayList<HttpRequestProxy> httpRequests = new ArrayList<HttpRequestProxy>();
+			for (RequestModel request: requests) {
+				HttpRequestProxy httpRequest = new HttpRequestProxy(request.getRequest());
+				httpRequests.add(httpRequest);
+			}
+			System.out.println("Created HttpRequest for all the byte[] requests.");
 
 			//call the request_builder on all the requests
+			for (HttpRequestProxy httpRequest: httpRequests) {
+				httpRequest.parse_request_header();
+				httpRequest.parse_request_body();
+			}
+			System.out.println("Parsed all requests.");
 		}
 		catch (Exception e) {
 			e.printStackTrace();
