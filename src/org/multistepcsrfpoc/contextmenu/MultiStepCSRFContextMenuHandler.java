@@ -5,42 +5,41 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import org.multistepcsrfpoc.controller.client.MultiStepCSRFPOCClient;
+import org.multistepcsrfpoc.model.request.RequestModel;
 
 import burp.IContextMenuFactory;
 import burp.IContextMenuInvocation;
 import burp.IExtensionHelpers;
 import burp.IHttpRequestResponse;
 
-import org.multistepcsrfpoc.controller.client.MultiStepCSRFPOCClient;
-import org.multistepcsrfpoc.model.request.RequestModel;
-
 public class MultiStepCSRFContextMenuHandler implements IContextMenuFactory, ActionListener, MouseListener{
-	
+
 	private static final String MAIN_MENU_NAME = "Generate Multi-Step CSRF POC";
 	private static final String MENU_ITEM_MAIN_NAME = "Generate new Multi-Step CSRF POC";
 	private static final String MENU_ITEM_DYNAMIC_NAME = "Add to existing POC";
-	
+
 	private boolean init_done = false;
-	
+
 	//extension helpers
-	private IExtensionHelpers burpHelpers;
-	
+	private final IExtensionHelpers burpHelpers;
+
 	//menu items
 	private JMenu mainMenu = null;
 	private JMenuItem mainMenuItem = null;
 	private JMenu dynamicMenuItem = null;
 	private List<JMenuItem> menuItems = null;
-	
+
 	//current state of seelctedMessages
 	IHttpRequestResponse[] selectedMessages = null;
-	
+
 	public MultiStepCSRFContextMenuHandler(IExtensionHelpers helpers) {
 		this.burpHelpers = helpers;
 		this.menuItems = new ArrayList<JMenuItem>();
@@ -50,38 +49,38 @@ public class MultiStepCSRFContextMenuHandler implements IContextMenuFactory, Act
 		if (this.init_done ==  true) return;
 		//main menu
 		this.mainMenu = new JMenu(MAIN_MENU_NAME);
-		
+
 		//submenu
 		this.mainMenuItem = new JMenuItem(MENU_ITEM_MAIN_NAME);
-		
+
 		//dynamic submenu
 		this.dynamicMenuItem = new JMenu(MENU_ITEM_DYNAMIC_NAME);
-		
+
 		//register handlers
 		this.mainMenuItem.addActionListener(this);
 		this.dynamicMenuItem.addMouseListener(this);
-		
+
 		//add main menu to menuItems
 		this.menuItems.add(mainMenu);
-		
+
 		//initialized
 		this.init_done = true;
 	}
-	
+
 	private void removeMenuItems() {
 		//reset the selectedMessages object
 		this.selectedMessages = null;
-		
+
 		this.mainMenu.remove(this.mainMenuItem);
 		this.mainMenu.remove(this.dynamicMenuItem);
 		this.dynamicMenuItem.removeAll();
 	}
-	
+
 	private void mainCreateMenuItems(IContextMenuInvocation invocation) {
 		byte invocationContext = invocation.getInvocationContext();
 		//save the selectedMessages list
 		this.selectedMessages = invocation.getSelectedMessages();
-		
+
 		if (invocationContext == invocation.CONTEXT_MESSAGE_EDITOR_REQUEST || invocationContext == invocation.CONTEXT_MESSAGE_EDITOR_RESPONSE ||
 		    invocationContext == invocation.CONTEXT_MESSAGE_VIEWER_REQUEST || invocationContext == invocation.CONTEXT_MESSAGE_VIEWER_RESPONSE ||
 		    invocationContext == invocation.CONTEXT_INTRUDER_PAYLOAD_POSITIONS || invocationContext == invocation.CONTEXT_INTRUDER_ATTACK_RESULTS ||
@@ -93,11 +92,11 @@ public class MultiStepCSRFContextMenuHandler implements IContextMenuFactory, Act
 		}
 		return;
 	}
-	
-	private void generateMultiStepCSRFPOC() {		 
+
+	private void generateMultiStepCSRFPOC() {
 		MultiStepCSRFPOCClient.getClient().createCSRFPOCWindow(this.getRequests());
 	}
-	
+
 	private void createDynamicSubMenus() {
 		Set<String> openPOCs = MultiStepCSRFPOCClient.getClient().getActivePOCs();
 		this.dynamicMenuItem.removeAll();
@@ -108,7 +107,7 @@ public class MultiStepCSRFContextMenuHandler implements IContextMenuFactory, Act
 			//add action listeners
 			dynamicItem.addActionListener(this);
 		}
-			
+
 		return;
 	}
 
@@ -119,22 +118,22 @@ public class MultiStepCSRFContextMenuHandler implements IContextMenuFactory, Act
 		this.mainCreateMenuItems(invocation);
 		return this.menuItems;
 	}
-	
+
 	private ArrayList<RequestModel> getRequests() {
 		ArrayList<RequestModel> requests = new ArrayList<RequestModel>();
 		for (IHttpRequestResponse message: this.selectedMessages) {
 			URL url = message.getUrl();
 			byte[] request = message.getRequest();
 			String method = this.burpHelpers.analyzeRequest(request).getMethod();
-			RequestModel requestModel = new RequestModel(method, url, request);
+			RequestModel requestModel = new RequestModel(method, url, message.getProtocol(), request);
 			requests.add(requestModel);
 		}
 		return requests;
 	}
-	
+
 	@Override
 	public void mouseExited(MouseEvent e) {
-		
+
 	}
 
 	@Override
@@ -146,10 +145,10 @@ public class MultiStepCSRFContextMenuHandler implements IContextMenuFactory, Act
 			MultiStepCSRFPOCClient.getClient().addToPOC(e.getActionCommand(), this.getRequests());
 		}
 	}
-	
+
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub		
+		// TODO Auto-generated method stub
 	}
 
 	@Override
@@ -158,14 +157,14 @@ public class MultiStepCSRFContextMenuHandler implements IContextMenuFactory, Act
 		//display the list of available windows
 		this.createDynamicSubMenus();
 	}
-	
+
 	@Override
 	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub		
+		// TODO Auto-generated method stub
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub		
+		// TODO Auto-generated method stub
 	}
 }

@@ -15,7 +15,7 @@ public class MultiStepCSRFPOCTest {
 		ArrayList<RequestModel> requestList = new ArrayList<RequestModel>();
 		int reqNum = 5;
 		for (int i=0; i< reqNum; i++)
-			requestList.add(new RequestModel("GET", new URL(TEST_URL+(i+1)), ("REQ"+(i+1)).getBytes()));
+			requestList.add(new RequestModel("GET", new URL(TEST_URL+(i+1)),"https", ("REQ"+(i+1)).getBytes()));
 		new MultiStepCSRFPOC(title, requestList, client);
 	}
 }
