@@ -11,8 +11,11 @@ import org.multistepcsrfpoc.controller.MultiStepCSRFPOCController;
 import org.multistepcsrfpoc.main.MultiStepCSRFPOC;
 import org.multistepcsrfpoc.model.config.CSRFPOCConfigModel;
 import org.multistepcsrfpoc.model.request.RequestModel;
+import org.python.core.PyException;
 
-import requestparser.proxy.HttpRequestProxy;
+import requestparsergenerator.api.GenerationType;
+import requestparsergenerator.api.TargetType;
+import requestparsergenerator.proxy.ParserBuilderProxy;
 
 public class MultiStepCSRFPOCClient implements MultiStepCSRFPOCClientInterface {
 	private int activePOCCount;
@@ -43,8 +46,8 @@ public class MultiStepCSRFPOCClient implements MultiStepCSRFPOCClientInterface {
 
 	@Override
 	public String generateClicked(CSRFPOCConfigModel csrfPOCConfig, ArrayList<RequestModel> requests) {
-		System.out.println("Regenerate Button Clicked!");
-		System.out.println("CSRF POC Config is "+"\n"+
+		//System.out.println("Regenerate Button Clicked!");
+		/*System.out.println("CSRF POC Config is "+"\n"+
 							"Use new tab: "+csrfPOCConfig.isUseNewTab()+"\n"+
 							"Use Iframe: "+csrfPOCConfig.isUseIframe()+"\n"+
 							"Use XHR: "+csrfPOCConfig.isUseXhr()+"\n"+
@@ -52,28 +55,33 @@ public class MultiStepCSRFPOCClient implements MultiStepCSRFPOCClientInterface {
 							"Use jQuery: "+csrfPOCConfig.isUseJQuery()+"\n"+
 							"Auto Submit: "+csrfPOCConfig.isAutoSubmit()
 						  );
+		*/
 		try {
 			//call the request_parser on all the requests
-			ArrayList<HttpRequestProxy> httpRequests = new ArrayList<HttpRequestProxy>();
-			for (RequestModel request: requests) {
-				HttpRequestProxy httpRequest = new HttpRequestProxy(request.getRequest());
-				httpRequests.add(httpRequest);
-			}
-			System.out.println("Created HttpRequest for all the byte[] requests.");
+			ArrayList<byte[]> httpRequests = new ArrayList<byte[]>();
+			for (RequestModel request: requests)
+				httpRequests.add(request.getRequest());
+			ParserBuilderProxy parserBuilder = new ParserBuilderProxy(requests);
+			//System.out.println("Created ParserBuilder for all the byte[] requests.");
 
-			//call the request_builder on all the requests
-			for (HttpRequestProxy httpRequest: httpRequests) {
-				httpRequest.parse_request_header();
-				httpRequest.parse_request_body();
-			}
-			System.out.println("Parsed all requests.");
+			//construct the generation type
+			int generationType = -1;
+			if (csrfPOCConfig.isUseForm()) generationType = GenerationType.form_request;
+			else if (csrfPOCConfig.isUseXhr()) generationType = GenerationType.xhr_request;
+			else if (csrfPOCConfig.isUseJQuery()) generationType = GenerationType.jquery_request;
+
+			//construct target type
+			int targetType = -1;
+			if (csrfPOCConfig.isUseIframe()) targetType = TargetType.iframe;
+			else if (csrfPOCConfig.isUseNewTab()) targetType = TargetType.new_tab;
+
+			return parserBuilder.generate(generationType, targetType, csrfPOCConfig.isAutoSubmit());
 		}
-		catch (Exception e) {
+		catch (PyException e) {
 			e.printStackTrace();
-			this.controller.updateMsgs(e.toString());
+			this.controller.updateMsgs(""+e.value);
 			return "";
 		}
-		return "<NEW CSRF POC>";
 	}
 
 	@Override
