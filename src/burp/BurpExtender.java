@@ -4,7 +4,7 @@ import burp.contextmenu.MultiStepCSRFContextMenuHandler;
 
 public class BurpExtender implements IBurpExtender{
 
-	public static String EXTENSION_NAME = "Multi-step CSRF POC Generator";
+	public static String EXTENSION_NAME = "Multi-step CSRF POC Burp Extender";
 	private IBurpExtenderCallbacks callbacks = null;
 
 	@Override
