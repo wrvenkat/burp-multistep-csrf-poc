@@ -15,9 +15,9 @@ import javax.swing.JMenuItem;
 import org.multistepcsrfpoc.controller.client.MultiStepCSRFPOCClient;
 import org.multistepcsrfpoc.model.request.RequestModel;
 
+import burp.IBurpExtenderCallbacks;
 import burp.IContextMenuFactory;
 import burp.IContextMenuInvocation;
-import burp.IExtensionHelpers;
 import burp.IHttpRequestResponse;
 
 public class MultiStepCSRFContextMenuHandler implements IContextMenuFactory, ActionListener, MouseListener{
@@ -29,19 +29,20 @@ public class MultiStepCSRFContextMenuHandler implements IContextMenuFactory, Act
 	private boolean init_done = false;
 
 	//extension helpers
-	private final IExtensionHelpers burpHelpers;
+	private final IBurpExtenderCallbacks burpCallbacks;
 
 	//menu items
 	private JMenu mainMenu = null;
 	private JMenuItem mainMenuItem = null;
 	private JMenu dynamicMenuItem = null;
-	private final List<JMenuItem> menuItems = null;
+	private List<JMenuItem> menuItems = null;
 
 	//current state of seelctedMessages
 	IHttpRequestResponse[] selectedMessages = null;
 
-	public MultiStepCSRFContextMenuHandler(IExtensionHelpers helpers) {
-		this.burpHelpers = helpers;
+	public MultiStepCSRFContextMenuHandler(IBurpExtenderCallbacks callbacks) {
+		this.burpCallbacks = callbacks;
+		this.menuItems = new ArrayList<JMenuItem>();
 	}
 
 	private void initMenuItems() {
@@ -93,11 +94,12 @@ public class MultiStepCSRFContextMenuHandler implements IContextMenuFactory, Act
 	}
 
 	private void generateMultiStepCSRFPOC() {
-		MultiStepCSRFPOCClient.getClient().createCSRFPOCWindow(this.getRequests());
+		MultiStepCSRFPOCClient.getClient(this.burpCallbacks).createCSRFPOCWindow(this.getRequests());
 	}
 
 	private void createDynamicSubMenus() {
-		Set<String> openPOCs = MultiStepCSRFPOCClient.getClient().getActivePOCs();
+		Set<String> openPOCs = MultiStepCSRFPOCClient.getClient(this.burpCallbacks).getActivePOCs();
+		this.dynamicMenuItem.removeAll();
 		for (String title: openPOCs) {
 			//add the new dynamic menu item
 			JMenuItem dynamicItem = new JMenuItem(title);
@@ -122,8 +124,8 @@ public class MultiStepCSRFContextMenuHandler implements IContextMenuFactory, Act
 		for (IHttpRequestResponse message: this.selectedMessages) {
 			URL url = message.getUrl();
 			byte[] request = message.getRequest();
-			String method = this.burpHelpers.analyzeRequest(request).getMethod();
-			RequestModel requestModel = new RequestModel(method, url, message.getProtocol(),request);
+			String method = this.burpCallbacks.getHelpers().analyzeRequest(request).getMethod();
+			RequestModel requestModel = new RequestModel(method, url, message.getProtocol(), request);
 			requests.add(requestModel);
 		}
 		return requests;
@@ -131,8 +133,7 @@ public class MultiStepCSRFContextMenuHandler implements IContextMenuFactory, Act
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-		//display the list of available windows
-		this.createDynamicSubMenus();
+
 	}
 
 	@Override
@@ -140,8 +141,8 @@ public class MultiStepCSRFContextMenuHandler implements IContextMenuFactory, Act
 		if (e.getActionCommand().equals(MENU_ITEM_MAIN_NAME))
 			this.generateMultiStepCSRFPOC();
 		else if (e.getActionCommand().startsWith(MultiStepCSRFPOCClient.TITLE_STRING)) {
-			//System.out.println("Menu item clicked is "+e.getActionCommand());
-			MultiStepCSRFPOCClient.getClient().addToPOC(e.getActionCommand(), this.getRequests());
+			System.out.println("Menu item clicked is "+e.getActionCommand());
+			MultiStepCSRFPOCClient.getClient(this.burpCallbacks).addToPOC(e.getActionCommand(), this.getRequests());
 		}
 	}
 
@@ -153,6 +154,8 @@ public class MultiStepCSRFContextMenuHandler implements IContextMenuFactory, Act
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		// TODO Auto-generated method stub
+		//display the list of available windows
+		this.createDynamicSubMenus();
 	}
 
 	@Override

@@ -212,7 +212,7 @@ public class MultiStepCSRFPOCController implements ActionListener, ListSelection
 				undoManager.undo();
 			}
 			catch (CannotUndoException ex) {
-				System.out.println("Cannot undo last action!");
+				//System.out.println("Cannot undo last action!");
 			}
 			updateUndoState(undoManager);
 			redoAction.updateRedoState(undoManager);
@@ -255,7 +255,7 @@ public class MultiStepCSRFPOCController implements ActionListener, ListSelection
 				undoManager.undo();
 			}
 			catch (CannotUndoException ex) {
-				System.out.println("Cannot undo last action!");
+				//System.out.println("Cannot undo last action!");
 			}
 			updateRedoState(undoManager);
 			undoAction.updateUndoState(undoManager);

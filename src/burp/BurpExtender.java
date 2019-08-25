@@ -1,22 +1,19 @@
 package burp;
 
-import org.multistepcsrfpoc.contextmenu.MultiStepCSRFContextMenuHandler;
-
-import burp.IBurpExtender;
-import burp.IBurpExtenderCallbacks;
+import burp.contextmenu.MultiStepCSRFContextMenuHandler;
 
 public class BurpExtender implements IBurpExtender{
-	
-	public static String EXTENSION_NAME = "Multi-step CSRF POC Generator";	
+
+	public static String EXTENSION_NAME = "Multi-step CSRF POC Generator";
 	private IBurpExtenderCallbacks callbacks = null;
 
 	@Override
-	public void registerExtenderCallbacks(IBurpExtenderCallbacks callbacks) {	
+	public void registerExtenderCallbacks(IBurpExtenderCallbacks callbacks) {
 		//save callbacks copy
-		this.callbacks = callbacks;			
+		this.callbacks = callbacks;
 		//set extension name
 		this.callbacks.setExtensionName(EXTENSION_NAME);
 		//create context menu
-		this.callbacks.registerContextMenuFactory(new MultiStepCSRFContextMenuHandler(callbacks.getHelpers()));
-	}	
+		this.callbacks.registerContextMenuFactory(new MultiStepCSRFContextMenuHandler(callbacks));
+	}
 }

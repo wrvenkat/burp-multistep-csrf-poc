@@ -3,6 +3,10 @@ package org.multistepcsrfpoc.controller.client;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
@@ -13,6 +17,7 @@ import org.multistepcsrfpoc.model.config.CSRFPOCConfigModel;
 import org.multistepcsrfpoc.model.request.RequestModel;
 import org.python.core.PyException;
 
+import burp.IBurpExtenderCallbacks;
 import requestparsergenerator.api.GenerationType;
 import requestparsergenerator.api.TargetType;
 import requestparsergenerator.proxy.ParserBuilderProxy;
@@ -22,18 +27,20 @@ public class MultiStepCSRFPOCClient implements MultiStepCSRFPOCClientInterface {
 	private final HashMap<String, MultiStepCSRFPOC> activePOCs;
 	private static MultiStepCSRFPOCClient client;
 	private MultiStepCSRFPOCController controller;
+	private final IBurpExtenderCallbacks burpCallbacks;
 
 	public static final String TITLE_STRING = "Enhanced CSRF POC ";
 
-	public MultiStepCSRFPOCClient() {
+	public MultiStepCSRFPOCClient(IBurpExtenderCallbacks burpCallbacks) {
 		this.activePOCs = new HashMap<String, MultiStepCSRFPOC>();
 		this.controller = null;
+		this.burpCallbacks = burpCallbacks;
 	}
 
 	/*Returns the instance of itself*/
-	public static MultiStepCSRFPOCClientInterface getClient() {
+	public static MultiStepCSRFPOCClientInterface getClient(IBurpExtenderCallbacks burpCallbacks) {
 		if (client == null) {
-			client = new MultiStepCSRFPOCClient();
+			client = new MultiStepCSRFPOCClient(burpCallbacks);
 			client.activePOCCount = 0;
 		}
 		return client;
@@ -78,10 +85,17 @@ public class MultiStepCSRFPOCClient implements MultiStepCSRFPOCClientInterface {
 			return parserBuilder.generate(generationType, targetType, csrfPOCConfig.isAutoSubmit());
 		}
 		catch (PyException e) {
-			e.printStackTrace();
+			OutputStream outpuStream = this.burpCallbacks.getStderr();
+			StringWriter errors = new StringWriter();
+			e.printStackTrace(new PrintWriter(errors));
+			try {
+				outpuStream.write(errors.toString().getBytes());
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
 			this.controller.updateMsgs(""+e.value);
-			return "";
 		}
+		return "";
 	}
 
 	@Override
