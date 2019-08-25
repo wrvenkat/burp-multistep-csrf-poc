@@ -56,8 +56,7 @@ public class MultiStepCSRFPOCTestClient implements MultiStepCSRFPOCClientInterfa
 
 	@Override
 	public void csrfPOCWindowClosed(String title) {
-		this.activePOCs.remove(title);
-		System.out.println("CSRF POC window closed!");
+		this.activePOCs.remove(title);		
 	}
 
 	@Override

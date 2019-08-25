@@ -146,6 +146,10 @@ public class RequestsTableModel extends AbstractTableModel {
 		return new SelectedRequestTextPaneModel(requestByte, this.rowToRequestMap.get(row).caretForRequest);
 	}
 
+	public RequestModel getSelectedRequestModel(int row) {
+		return this.requests.get(row);
+	}
+
 	//sets the request of the selected row
 	public void setSelectedRequest(int row, SelectedRequestTextPaneModel requestPaneStatus) {//byte[] request) {
 		if (row < 0 || row >= requests.size()) return;

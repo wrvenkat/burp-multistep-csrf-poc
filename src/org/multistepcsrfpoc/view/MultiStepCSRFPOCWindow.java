@@ -1,7 +1,9 @@
 package org.multistepcsrfpoc.view;
 
 import java.awt.Dimension;
+import java.awt.Event;
 import java.awt.Rectangle;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowListener;
 import java.util.HashMap;
@@ -18,9 +20,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTable;
 import javax.swing.JTextPane;
+import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.event.UndoableEditListener;
 import javax.swing.table.TableModel;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Caret;
@@ -44,6 +48,8 @@ public class MultiStepCSRFPOCWindow {
 	public static final String JQUERY_RADIOBUTTON = "jQuery";
 	public static final String AUTO_SUBMIT_CHECKBOX = "auto submit";
 	public static final String CLEAR_MSGS_BUTTON = "Clear Msgs";
+	public final String CSRF_POC_DOCUMENT_NAME = "csrf poc";
+	public final String SELECTED_REQUEST_DOCUMENT_NAME = "selected request";
 
 	//carries the buttons for which we need to register
 	//listeners for
@@ -171,6 +177,7 @@ public class MultiStepCSRFPOCWindow {
 			selectedRequestTextPane = new JTextPane();
 			selectedRequestTextPane.setText("HTML");
 			selectedRequestTextPane.setBounds(7, 159, 676, 188);
+			selectedRequestTextPane.getDocument().putProperty("name", this.SELECTED_REQUEST_DOCUMENT_NAME);
 		}
 
 		return selectedRequestTextPane;
@@ -203,6 +210,7 @@ public class MultiStepCSRFPOCWindow {
 			csrfPOCTextPane = new JTextPane();
 			csrfPOCTextPane.setText("CSRF POC");
 			csrfPOCTextPane.setBounds(7, 371, 800, 235);
+			csrfPOCTextPane.getDocument().putProperty("name", this.CSRF_POC_DOCUMENT_NAME);
 		}
 		return csrfPOCTextPane;
 	}
@@ -373,6 +381,45 @@ public class MultiStepCSRFPOCWindow {
 
 	public void registerMouseEventListener(MouseListener listener) {
 		this.selectedRequestTextPane.addMouseListener(listener);
+	}
+
+	public void registerSelectedRequestPaneUndoListener(MultiStepCSRFPOCController controller) {
+		UndoableEditListener listener = controller;
+		this.selectedRequestTextPane.getDocument().addUndoableEditListener(listener);
+
+		KeyStroke undoKeystroke = KeyStroke.getKeyStroke(KeyEvent.VK_Z, Event.CTRL_MASK);
+		KeyStroke redoKeystroke = KeyStroke.getKeyStroke(KeyEvent.VK_Y, Event.CTRL_MASK);
+
+		//undo
+		this.selectedRequestTextPane.getInputMap().put(undoKeystroke, controller.getUndoAction());
+
+		//redo
+		this.selectedRequestTextPane.getInputMap().put(redoKeystroke, controller.getRedoAction());
+	}
+
+	public void unregisterSelectedRequestPaneUndoListener(MultiStepCSRFPOCController controller) {
+		UndoableEditListener listener = controller;
+		this.selectedRequestTextPane.getDocument().removeUndoableEditListener(listener);
+
+		KeyStroke undoKeystroke = KeyStroke.getKeyStroke(KeyEvent.VK_Z, Event.CTRL_MASK);
+		KeyStroke redoKeystroke = KeyStroke.getKeyStroke(KeyEvent.VK_Y, Event.CTRL_MASK);
+
+		this.selectedRequestTextPane.getInputMap().remove(undoKeystroke);
+		this.selectedRequestTextPane.getInputMap().remove(redoKeystroke);
+	}
+
+	public void registerCSRFPOCTextPaneUndoListener(MultiStepCSRFPOCController controller) {
+		UndoableEditListener listener = controller;
+		this.csrfPOCTextPane.getDocument().addUndoableEditListener(listener);
+
+		KeyStroke undoKeystroke = KeyStroke.getKeyStroke(KeyEvent.VK_Z, Event.CTRL_MASK);
+		KeyStroke redoKeystroke = KeyStroke.getKeyStroke(KeyEvent.VK_Y, Event.CTRL_MASK);
+
+		//undo
+		this.csrfPOCTextPane.getInputMap().put(undoKeystroke, controller.getUndoAction());
+
+		//redo
+		this.csrfPOCTextPane.getInputMap().put(redoKeystroke, controller.getRedoAction());
 	}
 
 	//DONE: Implement the necessary methods that update the UI which can be called form the controller

@@ -8,31 +8,40 @@ import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.JCheckBox;
+import javax.swing.JTextPane;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.event.UndoableEditEvent;
+import javax.swing.event.UndoableEditListener;
 import javax.swing.text.Caret;
+import javax.swing.text.DefaultStyledDocument;
+import javax.swing.undo.CannotUndoException;
+import javax.swing.undo.UndoManager;
 
 import org.multistepcsrfpoc.controller.client.MultiStepCSRFPOCClientInterface;
 import org.multistepcsrfpoc.model.MultiStepCSRFPOCModel;
 import org.multistepcsrfpoc.model.table.SelectedRequestTextPaneModel;
 import org.multistepcsrfpoc.view.MultiStepCSRFPOCWindow;
 
-/*
- *  Ideally the MultiStepCSRFPOCController must be an implementation of a defined interface
- *  that the UI expects. That way the contract is more explicit and readable.
- *
- *  TODO: The above can be implemented when required.
- * */
-public class MultiStepCSRFPOCController implements ActionListener, ListSelectionListener, WindowListener, DocumentListener, MouseListener {
+public class MultiStepCSRFPOCController implements ActionListener, ListSelectionListener, WindowListener, DocumentListener, MouseListener, UndoableEditListener{
 	private MultiStepCSRFPOCClientInterface client;
 	private MultiStepCSRFPOCModel model;
 	private MultiStepCSRFPOCWindow view;
 	private int selectedRow;
 
+	private final UndoAction undoAction;
+	private final RedoAction redoAction;
+	private final UndoManager csrfPOCTextPaneUndoManager;
+
 	private MultiStepCSRFPOCController() {
+		this.undoAction = new UndoAction();
+		this.redoAction = new RedoAction();
+		this.csrfPOCTextPaneUndoManager = new UndoManager();
 	}
 
 	/*Accepts a client and returns an instance*/
@@ -56,6 +65,8 @@ public class MultiStepCSRFPOCController implements ActionListener, ListSelection
 
 		//register the document listener last
 		view.registerDocumentListener(controller);
+		view.registerSelectedRequestPaneUndoListener(controller);
+		view.registerCSRFPOCTextPaneUndoListener(controller);
 		return controller;
 	}
 
@@ -177,6 +188,98 @@ public class MultiStepCSRFPOCController implements ActionListener, ListSelection
 		}
 	}
 
+	public class UndoAction extends AbstractAction {
+		private static final long serialVersionUID = 1L;
+
+		public UndoAction() {
+			super("Undo");
+			setEnabled(false);
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			JTextPane textPane = (JTextPane)e.getSource();
+			String sourceDocumentName = (String)textPane.getDocument().getProperty("name");
+			UndoManager undoManager = null;
+			if (sourceDocumentName.equals(view.SELECTED_REQUEST_DOCUMENT_NAME)) {
+				undoManager = model.getSelectedRequestModel(selectedRow).getUndoManager();
+			}
+			else if (sourceDocumentName.equals(view.CSRF_POC_DOCUMENT_NAME)) {
+				undoManager = csrfPOCTextPaneUndoManager;
+			}
+
+			try {
+				undoManager.undo();
+			}
+			catch (CannotUndoException ex) {
+				System.out.println("Cannot undo last action!");
+			}
+			updateUndoState(undoManager);
+			redoAction.updateRedoState(undoManager);
+		}
+
+		public void updateUndoState(UndoManager undoManager) {
+			if (undoManager.canUndo()) {
+                setEnabled(true);
+                putValue(Action.NAME, undoManager.getUndoPresentationName());
+            } else {
+                setEnabled(false);
+                putValue(Action.NAME, "Undo");
+            }
+		}
+	}
+
+	public class RedoAction extends AbstractAction{
+
+		private static final long serialVersionUID = 1L;
+
+		public RedoAction() {
+			super("Redo");
+			setEnabled(false);
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			JTextPane textPane = (JTextPane)e.getSource();
+			String sourceDocumentName = (String)textPane.getDocument().getProperty("name");
+			UndoManager undoManager = null;
+
+			if (sourceDocumentName.equals(view.SELECTED_REQUEST_DOCUMENT_NAME)) {
+				undoManager = model.getSelectedRequestModel(selectedRow).getUndoManager();
+			}
+			else if (sourceDocumentName.equals(view.CSRF_POC_DOCUMENT_NAME)) {
+				undoManager = csrfPOCTextPaneUndoManager;
+			}
+
+			try {
+				undoManager.undo();
+			}
+			catch (CannotUndoException ex) {
+				System.out.println("Cannot undo last action!");
+			}
+			updateRedoState(undoManager);
+			undoAction.updateUndoState(undoManager);
+		}
+
+		public void updateRedoState(UndoManager undoManager) {
+			if (undoManager.canRedo()) {
+                setEnabled(true);
+                putValue(Action.NAME, undoManager.getRedoPresentationName());
+            } else {
+                setEnabled(false);
+                putValue(Action.NAME, "Redo");
+            }
+		}
+	}
+
+	public UndoAction getUndoAction() {
+		return undoAction;
+	}
+
+	public RedoAction getRedoAction() {
+		return redoAction;
+	}
+
 	//listener to listen for when the table selection changes
 	@Override
 	public void valueChanged(ListSelectionEvent event) {
@@ -224,6 +327,29 @@ public class MultiStepCSRFPOCController implements ActionListener, ListSelection
 		/*byte[] textBytes = view.getSelectedRequestText().getBytes();
 		Caret caret = view.getSelectedRequestPaneCaret();
 		model.setSelectedRequest(selectedRow, new SelectedRequestTextPaneModel(textBytes, caret));*/
+	}
+
+	@Override
+	public void undoableEditHappened(UndoableEditEvent e) {
+		DefaultStyledDocument document = (DefaultStyledDocument)e.getSource();
+		String sourceDocumentName = (String)document.getProperty("name");
+		UndoManager undoManager = null;
+		boolean proceed = true;
+
+		if (sourceDocumentName.equals(this.view.SELECTED_REQUEST_DOCUMENT_NAME)) {
+			if (selectedRow < 0)
+				proceed = false;
+			if (proceed)
+				undoManager = this.model.getSelectedRequestModel(selectedRow).getUndoManager();
+		}
+		else if (sourceDocumentName.equals(this.view.CSRF_POC_DOCUMENT_NAME))
+			undoManager = this.csrfPOCTextPaneUndoManager;
+
+		if (proceed) {
+			undoManager.addEdit(e.getEdit());
+			undoAction.updateUndoState(undoManager);
+			redoAction.updateRedoState(undoManager);
+		}
 	}
 
 	/*Autogenerated stubs*/
@@ -291,4 +417,5 @@ public class MultiStepCSRFPOCController implements ActionListener, ListSelection
 		// TODO Auto-generated method stub
 
 	}
+
 }

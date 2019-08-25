@@ -45,6 +45,10 @@ public class MultiStepCSRFPOCModel {
 		return tableModel.getSelectedRequest(row);
 	}
 
+	public RequestModel getSelectedRequestModel(int row) {
+		return this.tableModel.getSelectedRequestModel(row);
+	}
+
 	public void setSelectedRequest(int row, SelectedRequestTextPaneModel paneStatus) {
 		tableModel.setSelectedRequest(row, paneStatus);
 	}
