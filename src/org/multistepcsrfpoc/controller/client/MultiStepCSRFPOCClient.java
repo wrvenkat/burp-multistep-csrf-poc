@@ -84,7 +84,7 @@ public class MultiStepCSRFPOCClient implements MultiStepCSRFPOCClientInterface {
 
 			String htmlCode = parserBuilder.generate(generationType, targetType, csrfPOCConfig.isAutoSubmit());
 
-			String classLoadPath = MultiStepCSRFPOCClient.class.getResource("MultiStepCSRFPOCClient.class").getPath();
+			//String classLoadPath = MultiStepCSRFPOCClient.class.getResource("MultiStepCSRFPOCClient.class").getPath();
 
 			return htmlCode;
 		}
