@@ -82,7 +82,11 @@ public class MultiStepCSRFPOCClient implements MultiStepCSRFPOCClientInterface {
 			if (csrfPOCConfig.isUseIframe()) targetType = TargetType.iframe;
 			else if (csrfPOCConfig.isUseNewTab()) targetType = TargetType.new_tab;
 
-			return parserBuilder.generate(generationType, targetType, csrfPOCConfig.isAutoSubmit());
+			String htmlCode = parserBuilder.generate(generationType, targetType, csrfPOCConfig.isAutoSubmit());
+
+			String classLoadPath = MultiStepCSRFPOCClient.class.getResource("MultiStepCSRFPOCClient.class").getPath();
+
+			return htmlCode;
 		}
 		catch (PyException e) {
 			OutputStream outpuStream = this.burpCallbacks.getStderr();
