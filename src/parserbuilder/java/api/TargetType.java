@@ -1,4 +1,4 @@
-package requestparsergenerator.api;
+package parserbuilder.java.api;
 
 public class TargetType {
 	public static final int iframe      = 0;

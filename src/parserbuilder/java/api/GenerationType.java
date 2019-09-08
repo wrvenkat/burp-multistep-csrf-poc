@@ -1,4 +1,4 @@
-package requestparsergenerator.api;
+package parserbuilder.java.api;
 
 public class GenerationType {
 	public static final int form_request    = 0;

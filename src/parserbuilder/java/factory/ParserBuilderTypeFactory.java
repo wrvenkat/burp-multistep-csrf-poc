@@ -1,4 +1,4 @@
-package requestparsergenerator.factory;
+package parserbuilder.java.factory;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -11,7 +11,7 @@ import org.python.core.PyObject;
 import org.python.core.PyString;
 import org.python.util.PythonInterpreter;
 
-import requestparsergenerator.api.ParserBuilderType;
+import parserbuilder.java.api.ParserBuilderType;
 
 public class ParserBuilderTypeFactory {
 	public static final String fileUploadFolder = "file_uploads";
@@ -24,7 +24,7 @@ public class ParserBuilderTypeFactory {
 		//System.out.println("Temp folder path: "+burpTempFolder);
 
 		PythonInterpreter pyInterpreter = new PythonInterpreter();
-		pyInterpreter.exec("from parserbuilder.request_parser_builder import ParserBuilder");
+		pyInterpreter.exec("from parserbuilder.python.request_parser_builder import ParserBuilder");
 		PyObject parserBuilderClassObj = pyInterpreter.get("ParserBuilder");
 		pyInterpreter.close();
 		ArrayList<PyFile> requestStreamList = new ArrayList<PyFile>();

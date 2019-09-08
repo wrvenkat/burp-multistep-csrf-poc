@@ -1,4 +1,4 @@
-package requestparsergenerator.api;
+package parserbuilder.java.api;
 
 import org.python.core.PyException;
 

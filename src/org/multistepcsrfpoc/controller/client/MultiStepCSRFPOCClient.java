@@ -18,9 +18,9 @@ import org.multistepcsrfpoc.model.request.RequestModel;
 import org.python.core.PyException;
 
 import burp.IBurpExtenderCallbacks;
-import requestparsergenerator.api.GenerationType;
-import requestparsergenerator.api.TargetType;
-import requestparsergenerator.proxy.ParserBuilderProxy;
+import parserbuilder.java.api.GenerationType;
+import parserbuilder.java.api.TargetType;
+import parserbuilder.java.proxy.ParserBuilderProxy;
 
 public class MultiStepCSRFPOCClient implements MultiStepCSRFPOCClientInterface {
 	private int activePOCCount;

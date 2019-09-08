@@ -1,12 +1,12 @@
-package requestparsergenerator.proxy;
+package parserbuilder.java.proxy;
 
 import java.util.ArrayList;
 
 import org.multistepcsrfpoc.model.request.RequestModel;
 import org.python.core.PyException;
 
-import requestparsergenerator.api.ParserBuilderType;
-import requestparsergenerator.factory.ParserBuilderTypeFactory;
+import parserbuilder.java.api.ParserBuilderType;
+import parserbuilder.java.factory.ParserBuilderTypeFactory;
 
 public class ParserBuilderProxy implements ParserBuilderType{
 	ParserBuilderType parserBuilder = null;
