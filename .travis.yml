@@ -2,8 +2,6 @@ language: java
 matrix:
   include:
     - name: "Build on Ubuntu 16.04"
-      os: precise
-      jdk:
-        - openjdk6
+      os: precise      
       install:
         "./.travis/run-jython-tests.sh"
