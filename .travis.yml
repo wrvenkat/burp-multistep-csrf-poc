@@ -4,4 +4,4 @@ matrix:
     - name: "Build on Ubuntu 16.04"
       os: precise      
       install:
-        "./.travis/run-jython-tests.sh"
+        "./.travis/build.sh"
