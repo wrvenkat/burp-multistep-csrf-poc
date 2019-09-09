@@ -4,6 +4,6 @@ matrix:
     - name: "Build on Ubuntu 16.04"
       os: precise
       jdk:
-        - oraclejdk6
+        - openjdk6
       install:
         "./.travis/run-jython-tests.sh"
