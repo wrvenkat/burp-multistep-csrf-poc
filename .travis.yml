@@ -2,6 +2,8 @@ language: java
 matrix:
   include:
     - name: "Build on Ubuntu 16.04"
-      os: precise      
+      os: precise
+      before_install:
+        - chmod +x .travis/build.sh
       install:
         "./.travis/build.sh"
