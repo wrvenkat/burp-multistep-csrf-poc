@@ -57,8 +57,8 @@ cd .. &&\
 
 #checkout the git modules
 cd $BUILD_DIR &&\
-#git clone https://github.com/wrvenkat/request_parser.git &&\
-#git clone https://github.com/wrvenkat/request_generator.git &&\
+git clone https://github.com/wrvenkat/request_parser.git &&\
+git clone https://github.com/wrvenkat/request_generator.git &&\
 
 #build jar file
 jar cvf ../$DIST_DIR/MultiStepCSRFPOC.jar * &&\
