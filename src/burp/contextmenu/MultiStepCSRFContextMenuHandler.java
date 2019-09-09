@@ -19,6 +19,7 @@ import burp.IBurpExtenderCallbacks;
 import burp.IContextMenuFactory;
 import burp.IContextMenuInvocation;
 import burp.IHttpRequestResponse;
+import burp.IRequestInfo;
 
 public class MultiStepCSRFContextMenuHandler implements IContextMenuFactory, ActionListener, MouseListener{
 
@@ -121,11 +122,12 @@ public class MultiStepCSRFContextMenuHandler implements IContextMenuFactory, Act
 
 	private ArrayList<RequestModel> getRequests() {
 		ArrayList<RequestModel> requests = new ArrayList<RequestModel>();
-		for (IHttpRequestResponse message: this.selectedMessages) {
-			URL url = message.getUrl();
-			byte[] request = message.getRequest();
-			String method = this.burpCallbacks.getHelpers().analyzeRequest(request).getMethod();
-			RequestModel requestModel = new RequestModel(method, url, message.getProtocol(), request);
+		for (IHttpRequestResponse requestResponseMessage: this.selectedMessages) {
+			IRequestInfo requestMessage = this.burpCallbacks.getHelpers().analyzeRequest(requestResponseMessage);
+			URL url = requestMessage.getUrl();
+			byte[] request = requestResponseMessage.getRequest();
+			String method = requestMessage.getMethod();
+			RequestModel requestModel = new RequestModel(method, url, requestResponseMessage.getProtocol(), request);
 			requests.add(requestModel);
 		}
 		return requests;
