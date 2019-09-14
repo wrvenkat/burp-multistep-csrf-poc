@@ -1,5 +1,6 @@
 import sys
 import os
+from io import BytesIO
 
 from request_parser.http.request import HttpRequest
 from request_parser.conf.settings import Settings
@@ -24,7 +25,8 @@ class ParserBuilder(ParserBuilderType):
         if file_upload_path is not None:
             settings = Settings({Settings.Key.FILE_UPLOAD_DIR : file_upload_path})
         
-        for request_stream in requests:
+        for request_bytes in requests:
+            request_stream = BytesIO(request_bytes)
             http_request = HttpRequest(request_stream=request_stream, settings=settings)
             #parse the request
             http_request.parse_request_header()
