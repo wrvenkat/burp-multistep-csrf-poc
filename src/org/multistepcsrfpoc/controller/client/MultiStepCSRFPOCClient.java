@@ -29,7 +29,7 @@ public class MultiStepCSRFPOCClient implements MultiStepCSRFPOCClientInterface {
 	private MultiStepCSRFPOCController controller;
 	private final IBurpExtenderCallbacks burpCallbacks;
 
-	public static final String TITLE_STRING = "Enhanced CSRF POC ";
+	public static final String TITLE_STRING = "Multi-step CSRF POC ";
 
 	public MultiStepCSRFPOCClient(IBurpExtenderCallbacks burpCallbacks) {
 		this.activePOCs = new HashMap<String, MultiStepCSRFPOC>();

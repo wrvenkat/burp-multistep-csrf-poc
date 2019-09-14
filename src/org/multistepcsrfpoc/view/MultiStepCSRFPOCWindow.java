@@ -98,12 +98,17 @@ public class MultiStepCSRFPOCWindow {
 	 */
 	private void initialize(String title) {
 		this.buttons = new HashMap<String, AbstractButton>();
+		Dimension fixedDimension = new Dimension(825,675);
 		frame = new JFrame();
 		frame.setTitle(title);
 		frame.setBounds(100, 100, 825, 675);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		frame.setPreferredSize(new Dimension(825,675));
-		frame.setMaximizedBounds(new Rectangle(new Dimension(825,675)));
+		frame.setPreferredSize(fixedDimension);
+		frame.setMaximizedBounds(new Rectangle(fixedDimension));
+		if (System.getProperty("os.name").indexOf("Mac") >= 0)
+			fixedDimension = new Dimension(825,700);
+		frame.setMinimumSize(fixedDimension);
+		frame.setMaximumSize(fixedDimension);
 		mainScrollPane = new JScrollPane(getMainPanel());
 		frame.getContentPane().add(mainScrollPane);
 		this.getRequestsTable().getSelectionModel().setValueIsAdjusting(true);
