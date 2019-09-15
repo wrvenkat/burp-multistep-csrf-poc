@@ -9,8 +9,8 @@ BURP_SUITE_URL="https://portswigger.net/burp/releases/download?product=community
 FUTURE_URL="https://files.pythonhosted.org/packages/90/52/e20466b85000a181e1e144fd8305caf2cf475e2f9674e797b222f8105f5f/future-0.17.1.tar.gz"
 SIX_URL="https://files.pythonhosted.org/packages/dd/bf/4138e7bfb757de47d1f4b6994648ec67a51efe58fa907c1e11e350cddfca/six-1.12.0.tar.gz"
 
-REQUEST_PARSER_URL="https://github.com:wrvenkat/request_parser.git"
-REQUEST_GENERATOR_URL="https://github.com:wrvenkat/request_generator.git"
+REQUEST_PARSER_URL="https://github.com/wrvenkat/request_parser.git"
+REQUEST_GENERATOR_URL="https://github.com/wrvenkat/request_generator.git"
 
 WORKING_DIR=~/build/wrvenkat/burp-multistep-csrf-poc
 DEPENDENCY_DIR="lib"
@@ -68,7 +68,7 @@ cd request_parser && for f in $(find . -name 'tests'); do rm -rf "$f"; done && c
 cd request_generator && for f in $(find . -name 'tests'); do rm -rf "$f"; done && cd .. &&\
 cp -r request_parser/request_parser/ ../$BUILD_DIR &&\
 cp -r request_generator/request_generator/ ../$BUILD_DIR &&\
-cd .. && pwd
+cd .. && pwd && ls -l
 
 #build jar file
 printf "Building JAR package...\n"
