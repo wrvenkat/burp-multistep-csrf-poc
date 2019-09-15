@@ -1,21 +1,19 @@
 language: shell
 matrix:
   include:
-    - name: "Build on Ubuntu 16.04"
-      os: precise
-      before_install:
-        - chmod +x .travis/build.sh
-      install:
-        - "./.travis/build.sh"
-before_deploy:
-  - chmod +x .travis/build.sh
-  - "./.travis/build.sh"
+  - name: Build on Ubuntu 16.04
+    os: precise
+    before_install:
+    - chmod +x .travis/build.sh
+    install:
+    - "./.travis/build.sh"
 deploy:
   provider: releases
   api_key:
-      secure: "eoA0GJvgi7XzE1w/OkiTVFAaNYF5fkr82l8O+JqsKwrF0r1qap/5Kp3uqgg3KjfOJVsOoPTAgDkj5KPk3IMZk0V4go5fSZOlNiPBjQbaSoj69ftdA11csLzUwS6Yem6DSIAtK31yC9AagYBEqFFE9jbEuAZKbZdL9yw3PbJIBfNR7Sn9dxXBEGvZchof7H3J71BJrEhYRLARACv2+XKPQd0u4C7j/Hbs3xeTmczebmIvJ+VN6u7vyLbe1gW1JPozUb56zidL281JGvSesoS6mItFI/a76iK0M+4lSJS6jXPal82YyohlIqM1TCM2sR/Kdp7LyrA6m5z/Pvd0cEaoOFB4AGhN/r6EwkU0joHbvB1NFB+t9nuq6MojC0uZs9M7fICM4Ito/kGkLheAZ7VE046jJOrzuyGajJzR9QOBA+L653Culokyc3EFhbD2yZ0t1RuYbrYrF0XdTmmFjvv2Y5A/aK64v8Bes9MkB0xMHqmM0ag9R7koRkUtwhfPcHzQf3pngdv3XA4QPK4HvctXETuS1kogUq0rKAVAG+mKphfGikDvRCLRQ8LelkoLKryLAyEj5jJJxKcXAkMW5Ls4o4BxQICRv5Ko2QQco7HgbYp1Ogy0z4lWriUolBfGcendWPv7ucGPvEK340DScyu90TiUxkDk6S7aLfASujVpt30="      
+    secure: GCkdm0uCOsn4RUvdnEiCgBSXPj+hGUKkFKhQLrfeokA8tq0t8g5OelBqXjGNEAd2YdIXfNchvv5vrizauDmE4RuOJyjnLD/j4I+MaE8elSnlwiN6dZyG7Ot+vcWY5W5ODTXjtJNA0n7D0n9V7Vcmo5orTqBjmZZ1YSnpQ2KUxfj3yov6S5GcOdHs3TxPoFUUIGX868dOmzWzk1bmy1o7KXmM3japSX1FWQBsbTknTU8kXlvIhb1r0qLAoraam9JtdzLzYcBFuoZHovn3HzJz7bhmOyP7LffTbT1zt1jX6vawQSTFTBUeB/uu8Lb29GZormFrZByqTp/Vt8sMMx15zkIspFcrv79vk4iEaHsdZbb4qKnRTpzOHtsKwz+drrpa2+bFJgjJlZb4+7tQxAK7ZZcBHvhRj2oI3OiAyqmXp/2YF66IeSKlABPjTUubnr1GivYdgA0rxoDVN1Qt52/f9seW8dXvUgS3shhQkLGtswDkdbU+FbUymztLqIbMD0nJe9b4PbL0ARl6x9e4h55x6DrsIUdRb38lihXwU5CFxaEnnMMOpYEHqLv8He/miamxRI5R04P9VmpaJxpA04GXbHCYC7duppXfRPUdKuwsVeXo6Facoedcii118VBtDdveIjmwjzj/VeL3LbzqvOHAaKBWtNgMlcmqPbBdN/OZClU=
   file_glob: true
   file: dist/*.jar
   skip_cleanup: true
   on:
     tags: true
+    repo: wrvenkat/burp-multistep-csrf-poc
