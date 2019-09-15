@@ -1,3 +1,0 @@
-before_deploy:
-  - chmod +x .dependency-version-bump.sh
-  - ./.dependency-version-bump.sh
