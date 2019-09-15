@@ -15,4 +15,5 @@ deploy:
   file_glob: true
   file: dist/*.jar
   on:
+    tags: true
     repo: wrvenkat/burp-multistep-csrf-poc
