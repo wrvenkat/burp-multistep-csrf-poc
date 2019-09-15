@@ -16,6 +16,7 @@ new_version="$new_version""$new_patch_version" &&\
 #printf "New Version: %s" "$new_version"
 echo "$new_version" >> .dependency.version &&\
 git config user.email "wrvenkat@gmail.com" && git config user.name "Venkat Raman" &&\
+git add .dependency.version &&\
 git commit -m "Dependency update version bump." &&\
 git tag "$new_version" &&\
-git push && git push --tags
+git push --tags
