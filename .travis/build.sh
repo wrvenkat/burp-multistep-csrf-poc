@@ -68,7 +68,7 @@ cd request_parser && for f in $(find . -name 'tests'); do rm -rf "$f"; done && c
 cd request_generator && for f in $(find . -name 'tests'); do rm -rf "$f"; done && cd .. &&\
 cp -r request_parser/request_parser/ ../$BUILD_DIR &&\
 cp -r request_generator/request_generator/ ../$BUILD_DIR &&\
-cd .. && pwd && ls -l
+cd .. && ls -l
 
 #build jar file
 printf "Building JAR package...\n"
