@@ -105,8 +105,10 @@ public class MultiStepCSRFPOCWindow {
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.setPreferredSize(fixedDimension);
 		frame.setMaximizedBounds(new Rectangle(fixedDimension));
-		if (System.getProperty("os.name").indexOf("Mac") >= 0)
+		if (System.getProperty("os.name").indexOf("Mac") >= 0 ||
+				System.getProperty("os.name").indexOf("Windows") >= 0)
 			fixedDimension = new Dimension(825,700);
+		frame.setResizable(false);
 		frame.setMinimumSize(fixedDimension);
 		frame.setMaximumSize(fixedDimension);
 		mainScrollPane = new JScrollPane(getMainPanel());
