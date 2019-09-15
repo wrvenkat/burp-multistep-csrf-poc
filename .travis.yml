@@ -6,4 +6,16 @@ matrix:
       before_install:
         - chmod +x .travis/build.sh
       install:
-        "./.travis/build.sh"
+        - "./.travis/build.sh"
+before_deploy:
+  - chmod +x .travis/build.sh
+  - "./.travis/build.sh"
+deploy:
+  provider: releases
+  api_key:
+    secure: "vC0+tMXcH21DWepMdW2zSo1KCi1pqB1gqTSjyw5plU0Gd0m2i/Ayzp3D8Y55ultezheVtmsMS+SrbmpdaRMYonbl9opP1rhf60uPZUE4tem0qOu+D6mEC5WLiHi1EGem7PKMyYPWL3Gu6rMPioWO4LEy8zPPHdq2sdAT23Z2aZ8P13GEkuHceVMl0rkWonmri3YVEhgUgImCZH9HrUzN1tdWT3pSzySN+l1FYthp0ls4xoNmUXbU9TXRQs1PpY/Oa+itXLRHzRgs7imznWVIoewPcZnrrj66c5d+KiNdF2kwig/yKgY+r/I9G/+BEBPZ7TdGmRhbuqMOf/Vj2I30EqXsOlhojyTsKoB7f3JRpAk0xryoyyJxiGjcQuq0dowwSWoEkEKqqWptPCIW5lKpsf0gmbh6u2Yv5ePuHCuDuwEHrqndN/i4FbRRYnV8hOsPlRMtjvpPG3MrYMZbJGUGpL+WeQbV3lSd8HcCO6Ra4oUngx1yQEGYnIHbfNtDJruXJ0tU2zMR3bRLZG7YdbFTeynon0d/5jSI+3ujrAT+fBziKCAvUB5T+HT0HwF/XRMJkxdxFu4aMGvb9sisckM0Cvk9DIpZuj7RTDo26YEQ5wbtUBKkpfwYcdOSOFJw65ZxYOHAeeClFiJ5q/KqgoV2GdQzoFIxQR1lt/+t0wNAYx0="
+  file_glob: true
+  file: dist/*.jar
+  skip_cleanup: true
+  on:
+    tags: true

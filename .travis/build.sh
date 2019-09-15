@@ -72,6 +72,7 @@ cd .. && pwd
 
 #build jar file
 printf "Building JAR package...\n"
+version=$(git tag --sort=committerdate | tail -n1) &&\
 cd $BUILD_DIR &&\
-jar cvf ../$DIST_DIR/MultiStepCSRFPOC.jar * &&\
+jar cvf ../$DIST_DIR/MultiStepCSRFPOC-"$version".jar * &&\
 cd ..
