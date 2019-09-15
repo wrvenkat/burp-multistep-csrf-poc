@@ -19,4 +19,4 @@ git config user.email "wrvenkat@gmail.com" && git config user.name "Venkat Raman
 git add .dependency.version &&\
 git commit -m "Dependency update version bump." &&\
 git tag "$new_version" &&\
-git push --tags
+git push && git push --tags
