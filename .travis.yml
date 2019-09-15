@@ -9,11 +9,10 @@ matrix:
     - "./.travis/build.sh"
 deploy:
   provider: releases
-  api_key:
-    secure: GCkdm0uCOsn4RUvdnEiCgBSXPj+hGUKkFKhQLrfeokA8tq0t8g5OelBqXjGNEAd2YdIXfNchvv5vrizauDmE4RuOJyjnLD/j4I+MaE8elSnlwiN6dZyG7Ot+vcWY5W5ODTXjtJNA0n7D0n9V7Vcmo5orTqBjmZZ1YSnpQ2KUxfj3yov6S5GcOdHs3TxPoFUUIGX868dOmzWzk1bmy1o7KXmM3japSX1FWQBsbTknTU8kXlvIhb1r0qLAoraam9JtdzLzYcBFuoZHovn3HzJz7bhmOyP7LffTbT1zt1jX6vawQSTFTBUeB/uu8Lb29GZormFrZByqTp/Vt8sMMx15zkIspFcrv79vk4iEaHsdZbb4qKnRTpzOHtsKwz+drrpa2+bFJgjJlZb4+7tQxAK7ZZcBHvhRj2oI3OiAyqmXp/2YF66IeSKlABPjTUubnr1GivYdgA0rxoDVN1Qt52/f9seW8dXvUgS3shhQkLGtswDkdbU+FbUymztLqIbMD0nJe9b4PbL0ARl6x9e4h55x6DrsIUdRb38lihXwU5CFxaEnnMMOpYEHqLv8He/miamxRI5R04P9VmpaJxpA04GXbHCYC7duppXfRPUdKuwsVeXo6Facoedcii118VBtDdveIjmwjzj/VeL3LbzqvOHAaKBWtNgMlcmqPbBdN/OZClU=
+  api_key: 3adb5a790ff53c860547e7e38d515c9033993cde
+  skip_cleanup: true
   file_glob: true
   file: dist/*.jar
-  skip_cleanup: true
   on:
     tags: true
     repo: wrvenkat/burp-multistep-csrf-poc
