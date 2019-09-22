@@ -5,7 +5,9 @@ Multi-step CSRF POC extension for Burp combines two or more requests into a sing
 The extension makes use of the Python modules [request_parser](https://github.com/wrvenkat/request_parser) and [request_generator](https://github.com/wrvenkat/request_generator) to parse requests and generate code.
 
 ## Demo
-The following demo shows the usage and feature of this Multi-step CSRF POC extension.  
+The following demo shows the usage and feature of this Multi-step CSRF POC extension.
+<br>
+<br> 
 ![alt text](https://github.com/wrvenkat/burp-multistep-csrf-poc/blob/master/.md/gifs/multi-step-csrf-demo.gif)
 
 ## Getting Started
