@@ -1,4 +1,4 @@
-Ever wanted to combine the generated CSRF POCs in Burp into a single HTML? Or ever wished that Burp generated CSRF POCs combining two or more requests? Look no further!  
+Ever wanted to combine the individual CSRF POCs in Burp into a single HTML? Or ever wished that Burp generated CSRF POCs combining two or more requests? Look no further!  
 
 Multi-step CSRF POC extension for Burp combines two or more requests into a single HTML POC. This extension also gives you an option to generate the multi-step POC using form-based, XHR or jQuery based HTML.  
 
